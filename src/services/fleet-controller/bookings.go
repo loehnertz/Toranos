@@ -16,7 +16,7 @@ const ReservationsOnVehicleId = "SELECT * FROM bookings WHERE vehicle = $1 AND (
 const ReservationsOnCustomerId = "SELECT * FROM bookings WHERE customer = $1 AND (status = $2 OR status = $3)"
 const ReservationsOnVehicleIdAndCustomerId = "SELECT id FROM bookings WHERE vehicle = $1 AND customer = $2 AND status = $3"
 const InsertNewBooking = "INSERT INTO bookings (created_at, vehicle, customer) VALUES ($1, $2, $3)"
-const DeleteExistingBooking = "DELETE FROM bookings WHERE vehicle = $1 AND customer = $2"
+const DeleteExistingBooking = "DELETE FROM bookings WHERE vehicle = $1 AND customer = $2 AND status = $3"
 const UpdateBookingOnCustomerIdWithCertainStatus = "UPDATE bookings SET status = $1 WHERE customer = $2 AND status = $3"
 const BookedVehicleOfCustomerIdWithCertainStatus = "SELECT vehicle FROM bookings WHERE customer = $1 AND status = $2"
 
@@ -64,7 +64,7 @@ func unbook(database *sql.DB, vehicleId string, customerId string) (unbooked boo
 	selectError := row.Scan(&id)
 
 	if selectError == nil {
-		_, deleteError := database.Exec(DeleteExistingBooking, vehicleId, customerId)
+		_, deleteError := database.Exec(DeleteExistingBooking, vehicleId, customerId, config.StatusReserved)
 		if deleteError != nil {
 			log.Log(deleteError)
 			err = bookingCouldNotBeDeletedError
