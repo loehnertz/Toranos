@@ -11,6 +11,7 @@ import (
 
 func checkForExpiredReservations() {
 	resReservations, errReservations := fleetController.RetrieveReservations(context.TODO(), &fleet_controller.Empty{})
+
 	if errReservations != nil {
 		log.Log(errReservations)
 	} else {

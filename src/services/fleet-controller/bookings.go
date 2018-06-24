@@ -4,12 +4,11 @@ import (
 	"database/sql"
 	"errors"
 	_ "github.com/lib/pq"
+	"github.com/loehnertz/toranos/src/commons"
 	"github.com/micro/go-log"
 	"strings"
 	"time"
 )
-
-const FoundRowsErrorSubstring = "destination arguments in Scan,"
 
 const BookingsOnVehicleId = "SELECT * FROM bookings WHERE vehicle = $1"
 const BookingsOnCustomerId = "SELECT * FROM bookings WHERE customer = $1"
@@ -37,13 +36,13 @@ func book(database *sql.DB, vehicleId string, customerId string) (booked bool, e
 				err = insertError
 				log.Log(insertError)
 			}
-		} else if strings.Contains(BookingsOnCustomerIdError.Error(), FoundRowsErrorSubstring) {
+		} else if strings.Contains(BookingsOnCustomerIdError.Error(), commons.FoundRowsErrorSubstring) {
 			err = customerAlreadyBookedError
 		} else {
 			err = BookingsOnCustomerIdError
 		}
 	} else {
-		if strings.Contains(BookingsOnVehicleIdError.Error(), FoundRowsErrorSubstring) {
+		if strings.Contains(BookingsOnVehicleIdError.Error(), commons.FoundRowsErrorSubstring) {
 			err = vehicleAlreadyBookedError
 		} else {
 			err = BookingsOnVehicleIdError

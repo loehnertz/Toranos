@@ -18,6 +18,7 @@ func retrieveReservations(database *sql.DB) (reservations []*fleet_controller.Re
 		log.Log(reservationRetrievalError)
 		err = commons.UnknownError
 	}
+
 	for rows.Next() {
 		var id uint32
 		var createdAt time.Time
@@ -35,6 +36,7 @@ func retrieveReservations(database *sql.DB) (reservations []*fleet_controller.Re
 			})
 		}
 	}
+
 	if rowsError := rows.Err(); rowsError != nil {
 		log.Log(rowsError)
 		err = commons.UnknownError
