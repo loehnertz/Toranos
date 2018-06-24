@@ -84,5 +84,5 @@ func writeAvailableVehiclesIntoRedisCache(structure interface{}) {
 }
 
 func calculateApproximateRadialRange(battery uint32) uint32 {
-	return battery // TODO: Implement this!
+	return battery*100 // TODO: Implement this!
 }
