@@ -10,10 +10,10 @@ import (
 var fleetController fleet_controller.FleetControllerService
 
 func main() {
-	service := micro.NewService(micro.Name("fleet-monitor"))
+	service := micro.NewService(micro.Name(config.FleetMonitorName))
 	service.Init()
 
-	fleetController = fleet_controller.NewFleetControllerService("fleet-controller", service.Client())
+	fleetController = fleet_controller.NewFleetControllerService(config.FleetControllerName, service.Client())
 
 	gocron.Every(config.CheckForExpiredReservationsIntervalInSeconds).Seconds().Do(checkForExpiredReservations)
 	<-gocron.Start()

@@ -11,6 +11,7 @@ import (
 	"time"
 )
 
+const DatabaseDriver = "postgres"
 const DataSource = "user=jloehnertz dbname=toranos_fleet sslmode=disable"
 
 var service micro.Service
@@ -58,14 +59,14 @@ func (fc *FleetController) RetrieveReservations(ctx context.Context, req *fleet_
 
 func main() {
 	var databaseError error
-	database, databaseError = sql.Open("postgres", DataSource)
+	database, databaseError = sql.Open(DatabaseDriver, DataSource)
 	if databaseError != nil {
 		panic(databaseError)
 	}
 
 	// Create the service
 	service = micro.NewService(
-		micro.Name("fleet-controller"),
+		micro.Name(config.FleetControllerName),
 		micro.RegisterTTL(time.Second*30),
 		micro.RegisterInterval(time.Second*10),
 	)
