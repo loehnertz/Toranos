@@ -4,8 +4,10 @@ package config
 const FleetControllerName = "fleet-controller"
 const FleetMonitorName = "fleet-monitor"
 
-// Reservation settings
-const ReservedStatus = 1
+// Booking settings
+const StatusError = 0
+const StatusReserved = 1
+const StatusDriving = 2
 const ReservationTimeInSeconds = 900
 
 // FleetMonitor intervals
