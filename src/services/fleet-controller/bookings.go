@@ -12,12 +12,12 @@ import (
 	"time"
 )
 
-const BookingsOnVehicleId = "SELECT * FROM bookings WHERE vehicle = $1"
-const BookingsOnCustomerId = "SELECT * FROM bookings WHERE customer = $1"
-const BookingsOnVehicleIdAndCustomerId = "SELECT id FROM bookings WHERE vehicle = $1 AND customer = $2"
+const ReservationsOnVehicleId = "SELECT * FROM bookings WHERE vehicle = $1 AND (status = $2 OR status = $3)"
+const ReservationsOnCustomerId = "SELECT * FROM bookings WHERE customer = $1 AND (status = $2 OR status = $3)"
+const ReservationsOnVehicleIdAndCustomerId = "SELECT id FROM bookings WHERE vehicle = $1 AND customer = $2 AND status = $3"
 const InsertNewBooking = "INSERT INTO bookings (created_at, vehicle, customer) VALUES ($1, $2, $3)"
-const DeleteBooking = "DELETE FROM bookings WHERE vehicle = $1 AND customer = $2"
-const UpdateBookingOnCustomerId = "UPDATE bookings SET status = $1 WHERE customer = $2"
+const DeleteExistingBooking = "DELETE FROM bookings WHERE vehicle = $1 AND customer = $2"
+const UpdateBookingOnCustomerIdWithCertainStatus = "UPDATE bookings SET status = $1 WHERE customer = $2 AND status = $3"
 const BookedVehicleOfCustomerIdWithCertainStatus = "SELECT vehicle FROM bookings WHERE customer = $1 AND status = $2"
 
 var vehicleAlreadyBookedError = errors.New("vehicle already booked")
@@ -28,9 +28,9 @@ var beginningRideFailedError = errors.New("beginning the ride failed")
 var endingRideFailedError = errors.New("ending the ride failed")
 
 func book(database *sql.DB, vehicleId string, customerId string) (booked bool, err error) {
-	BookingsOnVehicleIdRows := database.QueryRow(BookingsOnVehicleId, vehicleId)
+	BookingsOnVehicleIdRows := database.QueryRow(ReservationsOnVehicleId, vehicleId, config.StatusReserved, config.StatusDriving)
 	BookingsOnVehicleIdError := BookingsOnVehicleIdRows.Scan()
-	BookingsOnCustomerIdRows := database.QueryRow(BookingsOnCustomerId, customerId)
+	BookingsOnCustomerIdRows := database.QueryRow(ReservationsOnCustomerId, customerId, config.StatusReserved, config.StatusDriving)
 	BookingsOnCustomerIdError := BookingsOnCustomerIdRows.Scan()
 
 	if BookingsOnVehicleIdError == sql.ErrNoRows {
@@ -60,11 +60,11 @@ func book(database *sql.DB, vehicleId string, customerId string) (booked bool, e
 
 func unbook(database *sql.DB, vehicleId string, customerId string) (unbooked bool, err error) {
 	var id int
-	row := database.QueryRow(BookingsOnVehicleIdAndCustomerId, vehicleId, customerId)
+	row := database.QueryRow(ReservationsOnVehicleIdAndCustomerId, vehicleId, customerId, config.StatusReserved)
 	selectError := row.Scan(&id)
 
 	if selectError == nil {
-		_, deleteError := database.Exec(DeleteBooking, vehicleId, customerId)
+		_, deleteError := database.Exec(DeleteExistingBooking, vehicleId, customerId)
 		if deleteError != nil {
 			log.Log(deleteError)
 			err = bookingCouldNotBeDeletedError
@@ -89,7 +89,7 @@ func beginRide(database *sql.DB, customerId string) (beginRideSuccessful bool, e
 	if selectError != nil {
 		err = beginningRideFailedError
 	} else {
-		_, updateError := database.Exec(UpdateBookingOnCustomerId, config.StatusDriving, customerId)
+		_, updateError := database.Exec(UpdateBookingOnCustomerIdWithCertainStatus, config.StatusDriving, customerId, config.StatusReserved)
 		if updateError != nil {
 			log.Log(updateError)
 			err = beginningRideFailedError
@@ -110,7 +110,7 @@ func endRide(database *sql.DB, customerId string) (endRideSuccessful bool, err e
 	if selectError != nil {
 		err = endingRideFailedError
 	} else {
-		_, updateError := database.Exec(UpdateBookingOnCustomerId, config.StatusDone, customerId)
+		_, updateError := database.Exec(UpdateBookingOnCustomerIdWithCertainStatus, config.StatusDone, customerId, config.StatusDriving)
 		if updateError != nil {
 			log.Log(updateError)
 			err = endingRideFailedError

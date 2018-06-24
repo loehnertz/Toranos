@@ -83,6 +83,7 @@ func (fc *FleetController) RetrieveReservations(ctx context.Context, req *fleet_
 }
 
 func main() {
+	// Connect the database
 	var databaseError error
 	database, databaseError = sql.Open(DatabaseDriver, DataSource)
 	if databaseError != nil {
