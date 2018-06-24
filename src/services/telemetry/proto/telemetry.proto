@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+service Telemetry {
+    rpc AllVehicles (Empty) returns (AllVehiclesResponse) {}
+}
+
+message Empty {}
+
+message AllVehiclesResponse {
+    message Vehicle {
+        string VehicleId = 1;
+        string Location = 2;
+        uint32 Battery = 3;
+    }
+    repeated Vehicle vehicles = 1;
+}
