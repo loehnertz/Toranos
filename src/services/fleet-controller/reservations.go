@@ -8,12 +8,10 @@ import (
 	"time"
 )
 
-const ReservedStatus = 1
-
 const AllReservations = "SELECT id, created_at, vehicle, customer FROM bookings WHERE status = $1"
 
 func retrieveReservations(database *sql.DB) (reservations []*fleet_controller.RetrieveReservationsResponse_Reservation, err error) {
-	rows, reservationRetrievalError := database.Query(AllReservations, ReservedStatus)
+	rows, reservationRetrievalError := database.Query(AllReservations, commons.ReservedStatus)
 	defer rows.Close()
 	if reservationRetrievalError != nil {
 		log.Log(reservationRetrievalError)

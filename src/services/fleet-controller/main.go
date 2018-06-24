@@ -5,12 +5,11 @@ import (
 	"fmt"
 
 	"database/sql"
+	"github.com/loehnertz/toranos/src/commons"
 	"github.com/loehnertz/toranos/src/services/fleet-controller/proto"
 	"github.com/micro/go-micro"
 	"time"
 )
-
-const ReservationTimeInSeconds = 900
 
 const DataSource = "user=jloehnertz dbname=toranos_fleet sslmode=disable"
 
@@ -24,7 +23,7 @@ func (fc *FleetController) Book(ctx context.Context, req *fleet_controller.Booki
 
 	if bookingSuccessful == true {
 		res.Successful = true
-		res.ReservedTime = ReservationTimeInSeconds
+		res.ReservedTime = commons.ReservationTimeInSeconds
 	} else {
 		res.Successful = false
 		res.Error = bookingError.Error()
