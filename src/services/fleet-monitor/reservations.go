@@ -28,7 +28,7 @@ func checkForExpiredReservations() {
 					log.Log(errUnbook)
 				} else {
 					if resUnbook.Successful == true {
-						fmt.Printf("Deleted reservation '%v'", reservation.Id)
+						fmt.Printf("Deleted reservation '%v' \n", reservation.Id)
 					}
 				}
 			}
