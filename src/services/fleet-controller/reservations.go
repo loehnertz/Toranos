@@ -3,6 +3,7 @@ package main
 import (
 	"database/sql"
 	"github.com/loehnertz/toranos/src/commons"
+	"github.com/loehnertz/toranos/src/config"
 	"github.com/loehnertz/toranos/src/services/fleet-controller/proto"
 	"github.com/micro/go-log"
 	"time"
@@ -11,7 +12,7 @@ import (
 const AllReservations = "SELECT id, created_at, vehicle, customer FROM bookings WHERE status = $1"
 
 func retrieveReservations(database *sql.DB) (reservations []*fleet_controller.RetrieveReservationsResponse_Reservation, err error) {
-	rows, reservationRetrievalError := database.Query(AllReservations, commons.ReservedStatus)
+	rows, reservationRetrievalError := database.Query(AllReservations, config.ReservedStatus)
 	defer rows.Close()
 	if reservationRetrievalError != nil {
 		log.Log(reservationRetrievalError)
