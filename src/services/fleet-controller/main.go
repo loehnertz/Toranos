@@ -57,6 +57,19 @@ func (fc *FleetController) BeginRide(ctx context.Context, req *fleet_controller.
 	return nil
 }
 
+func (fc *FleetController) EndRide(ctx context.Context, req *fleet_controller.EndRideRequest, res *fleet_controller.EndRideResponse) error {
+	endRideSuccessful, endRideError := endRide(database, req.CustomerId)
+
+	if endRideSuccessful == true {
+		res.Successful = true
+	} else {
+		res.Successful = false
+		res.Error = endRideError.Error()
+	}
+
+	return nil
+}
+
 func (fc *FleetController) RetrieveReservations(ctx context.Context, req *fleet_controller.Empty, res *fleet_controller.RetrieveReservationsResponse) error {
 	reservations, reservationsError := retrieveReservations(database)
 

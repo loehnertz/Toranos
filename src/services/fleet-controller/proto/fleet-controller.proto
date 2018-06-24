@@ -4,6 +4,7 @@ service FleetController {
     rpc Book (BookingRequest) returns (BookingResponse) {}
     rpc Unbook (UnbookingRequest) returns (UnbookingResponse) {}
     rpc BeginRide (BeginRideRequest) returns (BeginRideResponse) {}
+    rpc EndRide (EndRideRequest) returns (EndRideResponse) {}
     rpc RetrieveReservations (Empty) returns (RetrieveReservationsResponse) {}
 }
 
