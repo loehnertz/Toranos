@@ -9,7 +9,6 @@ import (
 	"github.com/loehnertz/toranos/src/services/fleet-monitor/proto"
 	"github.com/loehnertz/toranos/src/services/telemetry/proto"
 	"github.com/micro/go-log"
-	"strings"
 	"time"
 )
 
@@ -30,11 +29,7 @@ func retrieveAvailableVehicles() (vehicles []*fleet_monitor.AvailableVehiclesRes
 			vehicles = append(vehicles, &availableVehicles[i])
 		}
 	} else {
-		if strings.Contains(redisGetError.Error(), commons.RedisNotFoundErrorSubstring) {
-			vehicles = getAvailableVehiclesWhileRefreshingRedisCache()
-		} else {
-			log.Log(redisGetError)
-		}
+		vehicles = getAvailableVehiclesWhileRefreshingRedisCache()
 	}
 
 	return
