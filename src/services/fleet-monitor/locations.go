@@ -2,18 +2,57 @@ package main
 
 import (
 	"context"
+	"encoding/json"
 	"github.com/loehnertz/toranos/src/commons"
+	"github.com/loehnertz/toranos/src/config"
 	"github.com/loehnertz/toranos/src/services/fleet-controller/proto"
 	"github.com/loehnertz/toranos/src/services/fleet-monitor/proto"
 	"github.com/loehnertz/toranos/src/services/telemetry/proto"
 	"github.com/micro/go-log"
+	"strings"
+	"time"
 )
 
+const RedisAvailableVehiclesKey = "available_vehicles"
+
 func retrieveAvailableVehicles() (vehicles []*fleet_monitor.AvailableVehiclesResponse_Vehicle) {
-	return determineAvailableVehicles()
+	result, redisGetError := redisClient.Get(RedisAvailableVehiclesKey).Result()
+
+	if redisGetError == nil {
+		var availableVehicles []fleet_monitor.AvailableVehiclesResponse_Vehicle
+		jsonUnmarshalError := json.Unmarshal([]byte(result), &availableVehicles)
+		if jsonUnmarshalError != nil {
+			log.Log(jsonUnmarshalError)
+			vehicles = getAvailableVehiclesWhileRefreshingRedisCache()
+		}
+
+		for i := range availableVehicles {
+			vehicles = append(vehicles, &availableVehicles[i])
+		}
+	} else {
+		if strings.Contains(redisGetError.Error(), commons.RedisNotFoundErrorSubstring) {
+			vehicles = getAvailableVehiclesWhileRefreshingRedisCache()
+		} else {
+			log.Log(redisGetError)
+		}
+	}
+
+	return
 }
 
-func determineAvailableVehicles() (vehicles []*fleet_monitor.AvailableVehiclesResponse_Vehicle) {
+func getAvailableVehiclesWhileRefreshingRedisCache() (vehicles []*fleet_monitor.AvailableVehiclesResponse_Vehicle) {
+	availableVehicles := determineAvailableVehicles()
+
+	writeAvailableVehiclesIntoRedisCache(availableVehicles)
+
+	for i := range availableVehicles {
+		vehicles = append(vehicles, &availableVehicles[i])
+	}
+
+	return
+}
+
+func determineAvailableVehicles() (vehicles []fleet_monitor.AvailableVehiclesResponse_Vehicle) {
 	resReservations, errReservations := fleetController.RetrieveReservations(context.TODO(), &fleet_controller.Empty{})
 	resAllVehicles, errAllVehicles := telemetryService.AllVehicles(context.TODO(), &telemetry.Empty{})
 
@@ -28,7 +67,7 @@ func determineAvailableVehicles() (vehicles []*fleet_monitor.AvailableVehiclesRe
 
 			contains := commons.SliceOfStringsContains(reservedVehicles, vehicle.VehicleId)
 			if contains == false {
-				vehicles = append(vehicles, &fleet_monitor.AvailableVehiclesResponse_Vehicle{
+				vehicles = append(vehicles, fleet_monitor.AvailableVehiclesResponse_Vehicle{
 					VehicleId:                      vehicle.VehicleId,
 					Location:                       vehicle.Location,
 					ApproximateRadialRangeInMeters: calculateApproximateRadialRange(vehicle.Battery),
@@ -40,6 +79,13 @@ func determineAvailableVehicles() (vehicles []*fleet_monitor.AvailableVehiclesRe
 	}
 
 	return
+}
+
+func writeAvailableVehiclesIntoRedisCache(structure interface{}) {
+	redisSetError := redisClient.Set(RedisAvailableVehiclesKey, commons.StringifyIntoJson(structure), config.RedisAvailableVehiclesExpirationTimeInSeconds*time.Second).Err()
+	if redisSetError != nil {
+		log.Log(redisSetError)
+	}
 }
 
 func calculateApproximateRadialRange(battery uint32) uint32 {
