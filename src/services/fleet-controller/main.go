@@ -44,6 +44,19 @@ func (fc *FleetController) Unbook(ctx context.Context, req *fleet_controller.Unb
 	return nil
 }
 
+func (fc *FleetController) BeginRide(ctx context.Context, req *fleet_controller.BeginRideRequest, res *fleet_controller.BeginRideResponse) error {
+	beginRideSuccessful, beginRideError := beginRide(database, req.CustomerId)
+
+	if beginRideSuccessful == true {
+		res.Successful = true
+	} else {
+		res.Successful = false
+		res.Error = beginRideError.Error()
+	}
+
+	return nil
+}
+
 func (fc *FleetController) RetrieveReservations(ctx context.Context, req *fleet_controller.Empty, res *fleet_controller.RetrieveReservationsResponse) error {
 	reservations, reservationsError := retrieveReservations(database)
 

@@ -3,6 +3,7 @@ syntax = "proto3";
 service FleetController {
     rpc Book (BookingRequest) returns (BookingResponse) {}
     rpc Unbook (UnbookingRequest) returns (UnbookingResponse) {}
+    rpc BeginRide (BeginRideRequest) returns (BeginRideResponse) {}
     rpc RetrieveReservations (Empty) returns (RetrieveReservationsResponse) {}
 }
 
@@ -25,6 +26,24 @@ message UnbookingRequest {
 }
 
 message UnbookingResponse {
+    bool Successful = 1;
+    string Error = 2;
+}
+
+message BeginRideRequest {
+    string CustomerId = 2;
+}
+
+message BeginRideResponse {
+    bool Successful = 1;
+    string Error = 2;
+}
+
+message EndRideRequest {
+    string CustomerId = 2;
+}
+
+message EndRideResponse {
     bool Successful = 1;
     string Error = 2;
 }

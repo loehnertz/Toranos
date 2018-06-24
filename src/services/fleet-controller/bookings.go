@@ -3,8 +3,10 @@ package main
 import (
 	"database/sql"
 	"errors"
+	"fmt"
 	_ "github.com/lib/pq"
 	"github.com/loehnertz/toranos/src/commons"
+	"github.com/loehnertz/toranos/src/config"
 	"github.com/micro/go-log"
 	"strings"
 	"time"
@@ -15,11 +17,14 @@ const BookingsOnCustomerId = "SELECT * FROM bookings WHERE customer = $1"
 const BookingsOnVehicleIdAndCustomerId = "SELECT id FROM bookings WHERE vehicle = $1 AND customer = $2"
 const InsertNewBooking = "INSERT INTO bookings (created_at, vehicle, customer) VALUES ($1, $2, $3)"
 const DeleteBooking = "DELETE FROM bookings WHERE vehicle = $1 AND customer = $2"
+const UpdateBookingOnCustomerId = "UPDATE bookings SET status = $1 WHERE customer = $2"
+const BookedVehicleOfCustomerId = "SELECT vehicle FROM bookings WHERE status = $1 AND customer = $2"
 
 var vehicleAlreadyBookedError = errors.New("vehicle already booked")
 var customerAlreadyBookedError = errors.New("customer already booked a vehicle")
 var vehicleWasNotBookedError = errors.New("the selected vehicle was not booked beforehand by the customer")
 var bookingCouldNotBeDeletedError = errors.New("booking could not be deleted for an unknown reason")
+var beginningRideFailedError = errors.New("the ride could not be initilized")
 
 func book(database *sql.DB, vehicleId string, customerId string) (booked bool, err error) {
 	BookingsOnVehicleIdRows := database.QueryRow(BookingsOnVehicleId, vehicleId)
@@ -70,6 +75,26 @@ func unbook(database *sql.DB, vehicleId string, customerId string) (unbooked boo
 	} else {
 		log.Log(selectError)
 		err = selectError
+	}
+
+	return
+}
+
+func beginRide(database *sql.DB, customerId string) (begunRide bool, err error) {
+	var vehicle string
+	rows := database.QueryRow(BookedVehicleOfCustomerId, config.StatusReserved, customerId)
+	selectError := rows.Scan(&vehicle)
+	if selectError != nil {
+		err = beginningRideFailedError
+	} else {
+		_, updateError := database.Exec(UpdateBookingOnCustomerId, config.StatusDriving, customerId)
+		if updateError != nil {
+			log.Log(updateError)
+			err = beginningRideFailedError
+		} else {
+			fmt.Printf("Unlocking vehicle '%v' \n", vehicle)
+			begunRide = true
+		}
 	}
 
 	return

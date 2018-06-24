@@ -13,6 +13,10 @@ It has these top-level messages:
 	BookingResponse
 	UnbookingRequest
 	UnbookingResponse
+	BeginRideRequest
+	BeginRideResponse
+	EndRideRequest
+	EndRideResponse
 	RetrieveReservationsResponse
 */
 package fleet_controller
@@ -48,6 +52,7 @@ var _ server.Option
 type FleetControllerService interface {
 	Book(ctx context.Context, in *BookingRequest, opts ...client.CallOption) (*BookingResponse, error)
 	Unbook(ctx context.Context, in *UnbookingRequest, opts ...client.CallOption) (*UnbookingResponse, error)
+	BeginRide(ctx context.Context, in *BeginRideRequest, opts ...client.CallOption) (*BeginRideResponse, error)
 	RetrieveReservations(ctx context.Context, in *Empty, opts ...client.CallOption) (*RetrieveReservationsResponse, error)
 }
 
@@ -89,6 +94,16 @@ func (c *fleetControllerService) Unbook(ctx context.Context, in *UnbookingReques
 	return out, nil
 }
 
+func (c *fleetControllerService) BeginRide(ctx context.Context, in *BeginRideRequest, opts ...client.CallOption) (*BeginRideResponse, error) {
+	req := c.c.NewRequest(c.name, "FleetController.BeginRide", in)
+	out := new(BeginRideResponse)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *fleetControllerService) RetrieveReservations(ctx context.Context, in *Empty, opts ...client.CallOption) (*RetrieveReservationsResponse, error) {
 	req := c.c.NewRequest(c.name, "FleetController.RetrieveReservations", in)
 	out := new(RetrieveReservationsResponse)
@@ -104,6 +119,7 @@ func (c *fleetControllerService) RetrieveReservations(ctx context.Context, in *E
 type FleetControllerHandler interface {
 	Book(context.Context, *BookingRequest, *BookingResponse) error
 	Unbook(context.Context, *UnbookingRequest, *UnbookingResponse) error
+	BeginRide(context.Context, *BeginRideRequest, *BeginRideResponse) error
 	RetrieveReservations(context.Context, *Empty, *RetrieveReservationsResponse) error
 }
 
@@ -111,6 +127,7 @@ func RegisterFleetControllerHandler(s server.Server, hdlr FleetControllerHandler
 	type fleetController interface {
 		Book(ctx context.Context, in *BookingRequest, out *BookingResponse) error
 		Unbook(ctx context.Context, in *UnbookingRequest, out *UnbookingResponse) error
+		BeginRide(ctx context.Context, in *BeginRideRequest, out *BeginRideResponse) error
 		RetrieveReservations(ctx context.Context, in *Empty, out *RetrieveReservationsResponse) error
 	}
 	type FleetController struct {
@@ -130,6 +147,10 @@ func (h *fleetControllerHandler) Book(ctx context.Context, in *BookingRequest, o
 
 func (h *fleetControllerHandler) Unbook(ctx context.Context, in *UnbookingRequest, out *UnbookingResponse) error {
 	return h.FleetControllerHandler.Unbook(ctx, in, out)
+}
+
+func (h *fleetControllerHandler) BeginRide(ctx context.Context, in *BeginRideRequest, out *BeginRideResponse) error {
+	return h.FleetControllerHandler.BeginRide(ctx, in, out)
 }
 
 func (h *fleetControllerHandler) RetrieveReservations(ctx context.Context, in *Empty, out *RetrieveReservationsResponse) error {
