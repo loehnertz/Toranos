@@ -10,6 +10,8 @@ It is generated from these files:
 It has these top-level messages:
 	BookingRequest
 	BookingResponse
+	UnbookingRequest
+	UnbookingResponse
 */
 package fleet_controller
 
@@ -43,6 +45,7 @@ var _ server.Option
 
 type FleetControllerService interface {
 	Book(ctx context.Context, in *BookingRequest, opts ...client.CallOption) (*BookingResponse, error)
+	Unbook(ctx context.Context, in *UnbookingRequest, opts ...client.CallOption) (*UnbookingResponse, error)
 }
 
 type fleetControllerService struct {
@@ -73,15 +76,27 @@ func (c *fleetControllerService) Book(ctx context.Context, in *BookingRequest, o
 	return out, nil
 }
 
+func (c *fleetControllerService) Unbook(ctx context.Context, in *UnbookingRequest, opts ...client.CallOption) (*UnbookingResponse, error) {
+	req := c.c.NewRequest(c.name, "FleetController.Unbook", in)
+	out := new(UnbookingResponse)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // Server API for FleetController service
 
 type FleetControllerHandler interface {
 	Book(context.Context, *BookingRequest, *BookingResponse) error
+	Unbook(context.Context, *UnbookingRequest, *UnbookingResponse) error
 }
 
 func RegisterFleetControllerHandler(s server.Server, hdlr FleetControllerHandler, opts ...server.HandlerOption) {
 	type fleetController interface {
 		Book(ctx context.Context, in *BookingRequest, out *BookingResponse) error
+		Unbook(ctx context.Context, in *UnbookingRequest, out *UnbookingResponse) error
 	}
 	type FleetController struct {
 		fleetController
@@ -96,4 +111,8 @@ type fleetControllerHandler struct {
 
 func (h *fleetControllerHandler) Book(ctx context.Context, in *BookingRequest, out *BookingResponse) error {
 	return h.FleetControllerHandler.Book(ctx, in, out)
+}
+
+func (h *fleetControllerHandler) Unbook(ctx context.Context, in *UnbookingRequest, out *UnbookingResponse) error {
+	return h.FleetControllerHandler.Unbook(ctx, in, out)
 }
