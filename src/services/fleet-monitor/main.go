@@ -3,16 +3,21 @@ package main
 import (
 	"context"
 	"fmt"
+	"github.com/go-redis/redis"
+	"github.com/loehnertz/toranos/src/commons"
 	"github.com/loehnertz/toranos/src/config"
 	"github.com/loehnertz/toranos/src/services/fleet-controller/proto"
 	"github.com/loehnertz/toranos/src/services/fleet-monitor/proto"
+	"github.com/loehnertz/toranos/src/services/telemetry/proto"
 	"github.com/micro/go-micro"
 	"github.com/robfig/cron"
 	"time"
 )
 
+var redisClient *redis.Client
 var service micro.Service
 var fleetController fleet_controller.FleetControllerService
+var telemetryService telemetry.TelemetryService
 
 type FleetMonitor struct{}
 
@@ -23,6 +28,9 @@ func (fm *FleetMonitor) AvailableVehicles(ctx context.Context, req *fleet_monito
 }
 
 func main() {
+	// Initialize a Redis client
+	redisClient = commons.InitRedisClient(commons.RedisHostAddress, "", commons.RedisDatabaseId)
+
 	// Create the service
 	service = micro.NewService(
 		micro.Name(config.FleetMonitorName),
@@ -34,8 +42,9 @@ func main() {
 	// Register the handler
 	fleet_monitor.RegisterFleetMonitorHandler(service.Server(), new(FleetMonitor))
 
-	// Initialize the FleetController client
+	// Initialize the service clients
 	fleetController = fleet_controller.NewFleetControllerService(config.FleetControllerName, service.Client())
+	telemetryService = telemetry.NewTelemetryService(config.TelemetryName, service.Client())
 
 	// Initialize all the tasks
 	scheduler := cron.New()
