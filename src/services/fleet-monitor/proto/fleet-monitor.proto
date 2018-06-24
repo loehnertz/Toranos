@@ -1,1 +1,16 @@
 syntax = "proto3";
+
+service FleetMonitor {
+    rpc AvailableVehicles (Empty) returns (AvailableVehiclesResponse) {}
+}
+
+message Empty {}
+
+message AvailableVehiclesResponse {
+    message Vehicle {
+        string VehicleId = 1;
+        string Location = 2;
+        uint32 ApproximateRadialRange = 3;
+    }
+    repeated Vehicle vehicles = 1;
+}
