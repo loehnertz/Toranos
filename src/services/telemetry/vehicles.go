@@ -16,7 +16,7 @@ func retrieveAllVehicles(redisClient *redis.Client) (vehicles []*telemetry.AllVe
 	} else {
 		var allVehicles []commons.Vehicle
 		jsonUnmarshalError := json.Unmarshal([]byte(result), &allVehicles)
-		if redisRetrievalError != nil {
+		if jsonUnmarshalError != nil {
 			log.Log(jsonUnmarshalError)
 		} else {
 			for i := range allVehicles {

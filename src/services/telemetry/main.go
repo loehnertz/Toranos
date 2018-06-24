@@ -25,6 +25,7 @@ func (tm *Telemetry) AllVehicles(ctx context.Context, req *telemetry.Empty, res 
 }
 
 func main() {
+	// Initialize a Redis client
 	redisClient = commons.InitRedisClient(commons.RedisHostAddress, "", commons.RedisDatabaseId)
 
 	// Create the service
