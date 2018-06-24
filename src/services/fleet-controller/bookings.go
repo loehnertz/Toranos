@@ -52,3 +52,26 @@ func book(database *sql.DB, vehicleId string, customerId string) (booked bool, e
 
 	return
 }
+
+func unbook(database *sql.DB, vehicleId string, customerId string) (unbooked bool, err error) {
+	var id int
+	rows := database.QueryRow(BookingsOnVehicleIdAndCustomerId, vehicleId, customerId)
+	selectError := rows.Scan(&id)
+
+	if selectError == nil {
+		_, deleteError := database.Exec(DeleteBooking, vehicleId, customerId)
+		if deleteError != nil {
+			log.Log(deleteError)
+			err = bookingCouldNotBeDeletedError
+		} else {
+			unbooked = true
+		}
+	} else if selectError == sql.ErrNoRows {
+		err = vehicleWasNotBookedError
+	} else {
+		log.Log(selectError)
+		err = selectError
+	}
+
+	return
+}
