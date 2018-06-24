@@ -55,7 +55,6 @@ message RetrieveReservationsResponse {
         int64 CreatedAt = 2;
         string Vehicle = 3;
         string Customer = 4;
-        uint32 Status = 5;
     }
     repeated Reservation reservations = 1;
     string Error = 2;
