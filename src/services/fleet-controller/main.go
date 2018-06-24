@@ -2,9 +2,8 @@ package main
 
 import (
 	"context"
-	"fmt"
-
 	"database/sql"
+	"fmt"
 	"github.com/loehnertz/toranos/src/config"
 	"github.com/loehnertz/toranos/src/services/fleet-controller/proto"
 	"github.com/micro/go-micro"
