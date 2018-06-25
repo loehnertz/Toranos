@@ -2,14 +2,25 @@ syntax = "proto3";
 
 service UserManagement {
     rpc AuthenticateUser (AuthenticateUserRequest) returns (AuthenticateUserResponse) {}
+    rpc IssueToken (IssueTokenRequest) returns (IssueTokenResponse) {}
 }
 
 message AuthenticateUserRequest {
-    string JWT = 1;
+    string Token = 1;
 }
 
 message AuthenticateUserResponse {
     bool Authenticated = 1;
     string UserId = 2;
     string Role = 3;
+}
+
+message IssueTokenRequest {
+    string UserId = 1;
+    string Password = 2;
+}
+
+message IssueTokenResponse {
+    bool Successful = 1;
+    string Token = 2;
 }
