@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	gorillacontext "github.com/gorilla/context"
 	"github.com/loehnertz/toranos/commons"
 	"github.com/loehnertz/toranos/services/user-management/proto"
 	"github.com/micro/go-log"
@@ -21,6 +22,7 @@ func authenticationMiddleware(next http.Handler) http.Handler {
 			w.Write([]byte(commons.UnknownError.Error()))
 		} else if resAuthenticateUser.Authenticated {
 			// Call the next handler
+			gorillacontext.Set(r, "user", resAuthenticateUser)
 			next.ServeHTTP(w, r)
 		} else {
 			w.Write([]byte(commons.NotAuthorizedError.Error()))
