@@ -105,7 +105,18 @@ func deleteBooking(w http.ResponseWriter, r *http.Request) {
 }
 
 func beginRide(w http.ResponseWriter, r *http.Request) {
+	user := gorillacontext.Get(r, "user").(*user_management.AuthenticateUserResponse)
 
+	resBeginRide, errBeginRide := fleetController.BeginRide(context.TODO(), &fleet_controller.BeginRideRequest{
+		CustomerId: user.Email,
+	})
+
+	if errBeginRide != nil {
+		log.Log(errBeginRide)
+		w.Write([]byte(commons.UnknownError.Error()))
+	} else {
+		respondWithJson(&w, resBeginRide)
+	}
 }
 
 func endRide(w http.ResponseWriter, r *http.Request) {
