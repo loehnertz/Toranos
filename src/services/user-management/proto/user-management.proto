@@ -7,12 +7,11 @@ service UserManagement {
 }
 
 message RegisterUserRequest {
-    string UserId = 1;
+    string Email = 1;
     string Password = 2;
-    string Email = 3;
-    string FirstName = 4;
-    string LastName = 5;
-    string LicenseId = 6;
+    string FirstName = 3;
+    string LastName = 4;
+    string LicenseId = 5;
 }
 
 message RegisterUserResponse {
