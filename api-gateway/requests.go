@@ -8,15 +8,6 @@ import (
 	"net/http"
 )
 
-type getAuthTokenRequest struct {
-	Email    string `json:"email"`
-	Password string `json:"password"`
-}
-
-type createBookingRequest struct {
-	VehicleId string `json:"vehicle"`
-}
-
 func deserialize(target interface{}, body io.ReadCloser) (deserialized interface{}, err error) {
 	decoder := json.NewDecoder(body)
 	decodeError := decoder.Decode(&target)

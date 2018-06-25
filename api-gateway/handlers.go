@@ -15,8 +15,8 @@ func registerNewUser(w http.ResponseWriter, r *http.Request) {
 }
 
 func getAuthToken(w http.ResponseWriter, r *http.Request) {
-	deserializedBody, deserializeError := deserialize(new(getAuthTokenRequest), r.Body)
-	body := deserializedBody.(*getAuthTokenRequest)
+	deserializedBody, deserializeError := deserialize(new(user_management.IssueUserTokenRequest), r.Body)
+	body := deserializedBody.(*user_management.IssueUserTokenRequest)
 
 	if deserializeError != nil {
 		w.Write([]byte(deserializeError.Error()))
@@ -46,8 +46,8 @@ func availableVehicles(w http.ResponseWriter, r *http.Request) {
 }
 
 func createBooking(w http.ResponseWriter, r *http.Request) {
-	deserializedBody, _ := deserialize(new(createBookingRequest), r.Body)
-	body := deserializedBody.(*createBookingRequest)
+	deserializedBody, _ := deserialize(new(fleet_controller.BookingRequest), r.Body)
+	body := deserializedBody.(*fleet_controller.BookingRequest)
 
 	resCreateBooking, errCreateBooking := fleetController.Book(context.TODO(), &fleet_controller.BookingRequest{
 		VehicleId:  body.VehicleId,
