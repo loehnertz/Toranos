@@ -19,7 +19,7 @@ var database *sql.DB
 type FleetController struct{}
 
 func (fc *FleetController) Book(ctx context.Context, req *fleet_controller.BookingRequest, res *fleet_controller.BookingResponse) error {
-	bookingSuccessful, bookingError := book(database, req.VehicleId, req.CustomerId)
+	bookingSuccessful, bookingError := book(req.VehicleId, req.CustomerId)
 
 	if bookingSuccessful == true {
 		res.Successful = true
@@ -32,7 +32,7 @@ func (fc *FleetController) Book(ctx context.Context, req *fleet_controller.Booki
 }
 
 func (fc *FleetController) Unbook(ctx context.Context, req *fleet_controller.UnbookingRequest, res *fleet_controller.UnbookingResponse) error {
-	unbookingSuccessful, unbookingError := unbook(database, req.VehicleId, req.CustomerId)
+	unbookingSuccessful, unbookingError := unbook(req.VehicleId, req.CustomerId)
 
 	if unbookingSuccessful == true {
 		res.Successful = true
@@ -45,7 +45,7 @@ func (fc *FleetController) Unbook(ctx context.Context, req *fleet_controller.Unb
 }
 
 func (fc *FleetController) BeginRide(ctx context.Context, req *fleet_controller.BeginRideRequest, res *fleet_controller.BeginRideResponse) error {
-	beginRideSuccessful, beginRideError := beginRide(database, req.CustomerId)
+	beginRideSuccessful, beginRideError := beginRide(req.CustomerId)
 
 	if beginRideSuccessful == true {
 		res.Successful = true
@@ -58,7 +58,7 @@ func (fc *FleetController) BeginRide(ctx context.Context, req *fleet_controller.
 }
 
 func (fc *FleetController) EndRide(ctx context.Context, req *fleet_controller.EndRideRequest, res *fleet_controller.EndRideResponse) error {
-	endRideSuccessful, endRideError := endRide(database, req.CustomerId)
+	endRideSuccessful, endRideError := endRide(req.CustomerId)
 
 	if endRideSuccessful == true {
 		res.Successful = true
@@ -71,7 +71,7 @@ func (fc *FleetController) EndRide(ctx context.Context, req *fleet_controller.En
 }
 
 func (fc *FleetController) RetrieveReservations(ctx context.Context, req *fleet_controller.Empty, res *fleet_controller.RetrieveReservationsResponse) error {
-	reservations, reservationsError := retrieveReservations(database)
+	reservations, reservationsError := retrieveReservations()
 
 	if reservationsError == nil {
 		res.Reservations = reservations

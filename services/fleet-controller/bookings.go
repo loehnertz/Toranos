@@ -28,7 +28,7 @@ var bookingCouldNotBeDeletedError = errors.New("booking could not be deleted for
 var beginningRideFailedError = errors.New("beginning the ride failed")
 var endingRideFailedError = errors.New("ending the ride failed")
 
-func book(database *sql.DB, vehicleId string, customerId string) (booked bool, err error) {
+func book(vehicleId string, customerId string) (booked bool, err error) {
 	BookingsOnVehicleIdRows := database.QueryRow(ReservationsOnVehicleId, vehicleId, config.StatusReserved, config.StatusDriving)
 	BookingsOnVehicleIdError := BookingsOnVehicleIdRows.Scan()
 	BookingsOnCustomerIdRows := database.QueryRow(ReservationsOnCustomerId, customerId, config.StatusReserved, config.StatusDriving)
@@ -59,7 +59,7 @@ func book(database *sql.DB, vehicleId string, customerId string) (booked bool, e
 	return
 }
 
-func unbook(database *sql.DB, vehicleId string, customerId string) (unbooked bool, err error) {
+func unbook(vehicleId string, customerId string) (unbooked bool, err error) {
 	var id int
 	row := database.QueryRow(ReservationsOnVehicleIdAndCustomerId, vehicleId, customerId, config.StatusReserved)
 	selectError := row.Scan(&id)
@@ -82,7 +82,7 @@ func unbook(database *sql.DB, vehicleId string, customerId string) (unbooked boo
 	return
 }
 
-func beginRide(database *sql.DB, customerId string) (beginRideSuccessful bool, err error) {
+func beginRide(customerId string) (beginRideSuccessful bool, err error) {
 	var vehicle string
 	row := database.QueryRow(BookedVehicleOfCustomerIdWithCertainStatus, customerId, config.StatusReserved)
 	selectError := row.Scan(&vehicle)
@@ -103,7 +103,7 @@ func beginRide(database *sql.DB, customerId string) (beginRideSuccessful bool, e
 	return
 }
 
-func endRide(database *sql.DB, customerId string) (endRideSuccessful bool, err error) {
+func endRide(customerId string) (endRideSuccessful bool, err error) {
 	var vehicle string
 	row := database.QueryRow(BookedVehicleOfCustomerIdWithCertainStatus, customerId, config.StatusDriving)
 	selectError := row.Scan(&vehicle)

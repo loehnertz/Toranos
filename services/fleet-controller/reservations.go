@@ -1,7 +1,6 @@
 package main
 
 import (
-	"database/sql"
 	"github.com/loehnertz/toranos/commons"
 	"github.com/loehnertz/toranos/config"
 	"github.com/loehnertz/toranos/services/fleet-controller/proto"
@@ -12,7 +11,7 @@ import (
 const AllReservations = "SELECT id, created_at, vehicle, customer, status FROM bookings WHERE status = $1 OR status = $2"
 const AllUnbilledBookings = "SELECT id, created_at, customer, distance_driven, time_driven FROM bookings WHERE status = $1 AND invoice IS NULL"
 
-func retrieveReservations(database *sql.DB) (reservations []*fleet_controller.RetrieveReservationsResponse_Reservation, err error) {
+func retrieveReservations() (reservations []*fleet_controller.RetrieveReservationsResponse_Reservation, err error) {
 	rows, reservationRetrievalError := database.Query(AllReservations, config.StatusReserved, config.StatusDriving)
 	defer rows.Close()
 	if reservationRetrievalError != nil {
