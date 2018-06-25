@@ -8,8 +8,8 @@ It is generated from these files:
 	user-management.proto
 
 It has these top-level messages:
-	RegisterUserRequest
-	RegisterUserResponse
+	RegisterCustomerRequest
+	RegisterCustomerResponse
 	IssueUserTokenRequest
 	IssueUserTokenResponse
 	AuthenticateUserRequest
@@ -46,7 +46,7 @@ var _ server.Option
 // Client API for UserManagement service
 
 type UserManagementService interface {
-	RegisterUser(ctx context.Context, in *RegisterUserRequest, opts ...client.CallOption) (*RegisterUserResponse, error)
+	RegisterCustomer(ctx context.Context, in *RegisterCustomerRequest, opts ...client.CallOption) (*RegisterCustomerResponse, error)
 	IssueUserToken(ctx context.Context, in *IssueUserTokenRequest, opts ...client.CallOption) (*IssueUserTokenResponse, error)
 	AuthenticateUser(ctx context.Context, in *AuthenticateUserRequest, opts ...client.CallOption) (*AuthenticateUserResponse, error)
 }
@@ -69,9 +69,9 @@ func NewUserManagementService(name string, c client.Client) UserManagementServic
 	}
 }
 
-func (c *userManagementService) RegisterUser(ctx context.Context, in *RegisterUserRequest, opts ...client.CallOption) (*RegisterUserResponse, error) {
-	req := c.c.NewRequest(c.name, "UserManagement.RegisterUser", in)
-	out := new(RegisterUserResponse)
+func (c *userManagementService) RegisterCustomer(ctx context.Context, in *RegisterCustomerRequest, opts ...client.CallOption) (*RegisterCustomerResponse, error) {
+	req := c.c.NewRequest(c.name, "UserManagement.RegisterCustomer", in)
+	out := new(RegisterCustomerResponse)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
 		return nil, err
@@ -102,14 +102,14 @@ func (c *userManagementService) AuthenticateUser(ctx context.Context, in *Authen
 // Server API for UserManagement service
 
 type UserManagementHandler interface {
-	RegisterUser(context.Context, *RegisterUserRequest, *RegisterUserResponse) error
+	RegisterCustomer(context.Context, *RegisterCustomerRequest, *RegisterCustomerResponse) error
 	IssueUserToken(context.Context, *IssueUserTokenRequest, *IssueUserTokenResponse) error
 	AuthenticateUser(context.Context, *AuthenticateUserRequest, *AuthenticateUserResponse) error
 }
 
 func RegisterUserManagementHandler(s server.Server, hdlr UserManagementHandler, opts ...server.HandlerOption) {
 	type userManagement interface {
-		RegisterUser(ctx context.Context, in *RegisterUserRequest, out *RegisterUserResponse) error
+		RegisterCustomer(ctx context.Context, in *RegisterCustomerRequest, out *RegisterCustomerResponse) error
 		IssueUserToken(ctx context.Context, in *IssueUserTokenRequest, out *IssueUserTokenResponse) error
 		AuthenticateUser(ctx context.Context, in *AuthenticateUserRequest, out *AuthenticateUserResponse) error
 	}
@@ -124,8 +124,8 @@ type userManagementHandler struct {
 	UserManagementHandler
 }
 
-func (h *userManagementHandler) RegisterUser(ctx context.Context, in *RegisterUserRequest, out *RegisterUserResponse) error {
-	return h.UserManagementHandler.RegisterUser(ctx, in, out)
+func (h *userManagementHandler) RegisterCustomer(ctx context.Context, in *RegisterCustomerRequest, out *RegisterCustomerResponse) error {
+	return h.UserManagementHandler.RegisterCustomer(ctx, in, out)
 }
 
 func (h *userManagementHandler) IssueUserToken(ctx context.Context, in *IssueUserTokenRequest, out *IssueUserTokenResponse) error {

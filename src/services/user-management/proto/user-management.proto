@@ -1,12 +1,12 @@
 syntax = "proto3";
 
 service UserManagement {
-    rpc RegisterUser (RegisterUserRequest) returns (RegisterUserResponse) {}
+    rpc RegisterCustomer (RegisterCustomerRequest) returns (RegisterCustomerResponse) {}
     rpc IssueUserToken (IssueUserTokenRequest) returns (IssueUserTokenResponse) {}
     rpc AuthenticateUser (AuthenticateUserRequest) returns (AuthenticateUserResponse) {}
 }
 
-message RegisterUserRequest {
+message RegisterCustomerRequest {
     string Email = 1;
     string Password = 2;
     string FirstName = 3;
@@ -14,7 +14,7 @@ message RegisterUserRequest {
     string LicenseId = 5;
 }
 
-message RegisterUserResponse {
+message RegisterCustomerResponse {
     bool Successful = 1;
     string Token = 2;
 }
