@@ -19,7 +19,7 @@ func checkForExpiredReservations() {
 			reservation := resReservations.Reservations[i]
 			createdAt := time.Unix(reservation.CreatedAt, 0)
 
-			if time.Since(createdAt) > (config.ReservationTimeInSeconds * time.Second) {
+			if reservation.Status == config.StatusReserved && time.Since(createdAt) > (config.ReservationTimeInSeconds*time.Second) {
 				resUnbook, errUnbook := fleetController.Unbook(context.TODO(), &fleet_controller.UnbookingRequest{
 					VehicleId:  reservation.Vehicle,
 					CustomerId: reservation.Customer,

@@ -9,10 +9,10 @@ import (
 	"time"
 )
 
-const AllReservations = "SELECT id, created_at, vehicle, customer FROM bookings WHERE status = $1"
+const AllReservations = "SELECT id, created_at, vehicle, customer, status FROM bookings WHERE status = $1 OR status = $2"
 
 func retrieveReservations(database *sql.DB) (reservations []*fleet_controller.RetrieveReservationsResponse_Reservation, err error) {
-	rows, reservationRetrievalError := database.Query(AllReservations, config.StatusReserved)
+	rows, reservationRetrievalError := database.Query(AllReservations, config.StatusReserved, config.StatusDriving)
 	defer rows.Close()
 	if reservationRetrievalError != nil {
 		log.Log(reservationRetrievalError)
@@ -24,7 +24,8 @@ func retrieveReservations(database *sql.DB) (reservations []*fleet_controller.Re
 		var createdAt time.Time
 		var vehicle string
 		var customer string
-		if rowsScanningError := rows.Scan(&id, &createdAt, &vehicle, &customer); rowsScanningError != nil {
+		var status int
+		if rowsScanningError := rows.Scan(&id, &createdAt, &vehicle, &customer, &status); rowsScanningError != nil {
 			log.Log(rowsScanningError)
 			err = commons.UnknownError
 		} else {
@@ -33,6 +34,7 @@ func retrieveReservations(database *sql.DB) (reservations []*fleet_controller.Re
 				CreatedAt: createdAt.Unix(),
 				Vehicle:   vehicle,
 				Customer:  customer,
+				Status:    uint32(status),
 			})
 		}
 	}
