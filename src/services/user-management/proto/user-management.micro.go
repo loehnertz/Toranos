@@ -8,10 +8,12 @@ It is generated from these files:
 	user-management.proto
 
 It has these top-level messages:
+	RegisterUserRequest
+	RegisterUserResponse
+	IssueUserTokenRequest
+	IssueUserTokenResponse
 	AuthenticateUserRequest
 	AuthenticateUserResponse
-	IssueTokenRequest
-	IssueTokenResponse
 */
 package user_management
 
@@ -44,8 +46,9 @@ var _ server.Option
 // Client API for UserManagement service
 
 type UserManagementService interface {
+	RegisterUser(ctx context.Context, in *RegisterUserRequest, opts ...client.CallOption) (*RegisterUserResponse, error)
+	IssueUserToken(ctx context.Context, in *IssueUserTokenRequest, opts ...client.CallOption) (*IssueUserTokenResponse, error)
 	AuthenticateUser(ctx context.Context, in *AuthenticateUserRequest, opts ...client.CallOption) (*AuthenticateUserResponse, error)
-	IssueToken(ctx context.Context, in *IssueTokenRequest, opts ...client.CallOption) (*IssueTokenResponse, error)
 }
 
 type userManagementService struct {
@@ -66,6 +69,26 @@ func NewUserManagementService(name string, c client.Client) UserManagementServic
 	}
 }
 
+func (c *userManagementService) RegisterUser(ctx context.Context, in *RegisterUserRequest, opts ...client.CallOption) (*RegisterUserResponse, error) {
+	req := c.c.NewRequest(c.name, "UserManagement.RegisterUser", in)
+	out := new(RegisterUserResponse)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userManagementService) IssueUserToken(ctx context.Context, in *IssueUserTokenRequest, opts ...client.CallOption) (*IssueUserTokenResponse, error) {
+	req := c.c.NewRequest(c.name, "UserManagement.IssueUserToken", in)
+	out := new(IssueUserTokenResponse)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *userManagementService) AuthenticateUser(ctx context.Context, in *AuthenticateUserRequest, opts ...client.CallOption) (*AuthenticateUserResponse, error) {
 	req := c.c.NewRequest(c.name, "UserManagement.AuthenticateUser", in)
 	out := new(AuthenticateUserResponse)
@@ -76,27 +99,19 @@ func (c *userManagementService) AuthenticateUser(ctx context.Context, in *Authen
 	return out, nil
 }
 
-func (c *userManagementService) IssueToken(ctx context.Context, in *IssueTokenRequest, opts ...client.CallOption) (*IssueTokenResponse, error) {
-	req := c.c.NewRequest(c.name, "UserManagement.IssueToken", in)
-	out := new(IssueTokenResponse)
-	err := c.c.Call(ctx, req, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 // Server API for UserManagement service
 
 type UserManagementHandler interface {
+	RegisterUser(context.Context, *RegisterUserRequest, *RegisterUserResponse) error
+	IssueUserToken(context.Context, *IssueUserTokenRequest, *IssueUserTokenResponse) error
 	AuthenticateUser(context.Context, *AuthenticateUserRequest, *AuthenticateUserResponse) error
-	IssueToken(context.Context, *IssueTokenRequest, *IssueTokenResponse) error
 }
 
 func RegisterUserManagementHandler(s server.Server, hdlr UserManagementHandler, opts ...server.HandlerOption) {
 	type userManagement interface {
+		RegisterUser(ctx context.Context, in *RegisterUserRequest, out *RegisterUserResponse) error
+		IssueUserToken(ctx context.Context, in *IssueUserTokenRequest, out *IssueUserTokenResponse) error
 		AuthenticateUser(ctx context.Context, in *AuthenticateUserRequest, out *AuthenticateUserResponse) error
-		IssueToken(ctx context.Context, in *IssueTokenRequest, out *IssueTokenResponse) error
 	}
 	type UserManagement struct {
 		userManagement
@@ -109,10 +124,14 @@ type userManagementHandler struct {
 	UserManagementHandler
 }
 
-func (h *userManagementHandler) AuthenticateUser(ctx context.Context, in *AuthenticateUserRequest, out *AuthenticateUserResponse) error {
-	return h.UserManagementHandler.AuthenticateUser(ctx, in, out)
+func (h *userManagementHandler) RegisterUser(ctx context.Context, in *RegisterUserRequest, out *RegisterUserResponse) error {
+	return h.UserManagementHandler.RegisterUser(ctx, in, out)
 }
 
-func (h *userManagementHandler) IssueToken(ctx context.Context, in *IssueTokenRequest, out *IssueTokenResponse) error {
-	return h.UserManagementHandler.IssueToken(ctx, in, out)
+func (h *userManagementHandler) IssueUserToken(ctx context.Context, in *IssueUserTokenRequest, out *IssueUserTokenResponse) error {
+	return h.UserManagementHandler.IssueUserToken(ctx, in, out)
+}
+
+func (h *userManagementHandler) AuthenticateUser(ctx context.Context, in *AuthenticateUserRequest, out *AuthenticateUserResponse) error {
+	return h.UserManagementHandler.AuthenticateUser(ctx, in, out)
 }

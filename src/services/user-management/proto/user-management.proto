@@ -1,8 +1,33 @@
 syntax = "proto3";
 
 service UserManagement {
+    rpc RegisterUser (RegisterUserRequest) returns (RegisterUserResponse) {}
+    rpc IssueUserToken (IssueUserTokenRequest) returns (IssueUserTokenResponse) {}
     rpc AuthenticateUser (AuthenticateUserRequest) returns (AuthenticateUserResponse) {}
-    rpc IssueToken (IssueTokenRequest) returns (IssueTokenResponse) {}
+}
+
+message RegisterUserRequest {
+    string UserId = 1;
+    string Password = 2;
+    string Email = 3;
+    string FirstName = 4;
+    string LastName = 5;
+    string LicenseId = 6;
+}
+
+message RegisterUserResponse {
+    bool Successful = 1;
+    string Token = 2;
+}
+
+message IssueUserTokenRequest {
+    string UserId = 1;
+    string Password = 2;
+}
+
+message IssueUserTokenResponse {
+    bool Successful = 1;
+    string Token = 2;
 }
 
 message AuthenticateUserRequest {
@@ -13,14 +38,4 @@ message AuthenticateUserResponse {
     bool Authenticated = 1;
     string UserId = 2;
     string Role = 3;
-}
-
-message IssueTokenRequest {
-    string UserId = 1;
-    string Password = 2;
-}
-
-message IssueTokenResponse {
-    bool Successful = 1;
-    string Token = 2;
 }
