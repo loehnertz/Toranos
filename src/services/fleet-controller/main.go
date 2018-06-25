@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
+	_ "github.com/lib/pq"
 	"github.com/loehnertz/toranos/src/config"
 	"github.com/loehnertz/toranos/src/services/fleet-controller/proto"
 	"github.com/micro/go-micro"
