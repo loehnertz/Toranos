@@ -1,1 +1,15 @@
 syntax = "proto3";
+
+service UserManagement {
+    rpc AuthenticateUser (AuthenticateUserRequest) returns (AuthenticateUserResponse) {}
+}
+
+message AuthenticateUserRequest {
+    string JWT = 1;
+}
+
+message AuthenticateUserResponse {
+    bool Authenticated = 1;
+    string UserId = 2;
+    string Role = 3;
+}
