@@ -86,7 +86,22 @@ func createBooking(w http.ResponseWriter, r *http.Request) {
 }
 
 func deleteBooking(w http.ResponseWriter, r *http.Request) {
+	user := gorillacontext.Get(r, "user").(*user_management.AuthenticateUserResponse)
 
+	deserializedBody, _ := deserialize(new(fleet_controller.UnbookingRequest), r.Body)
+	body := deserializedBody.(*fleet_controller.UnbookingRequest)
+
+	resDeleteBooking, errDeleteBooking := fleetController.Unbook(context.TODO(), &fleet_controller.UnbookingRequest{
+		VehicleId:  body.VehicleId,
+		CustomerId: user.Email,
+	})
+
+	if errDeleteBooking != nil {
+		log.Log(errDeleteBooking)
+		w.Write([]byte(commons.UnknownError.Error()))
+	} else {
+		respondWithJson(&w, resDeleteBooking)
+	}
 }
 
 func beginRide(w http.ResponseWriter, r *http.Request) {
