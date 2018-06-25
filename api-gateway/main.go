@@ -31,7 +31,6 @@ func main() {
 
 	// Register the router
 	router := mux.NewRouter()
-	router.Use(authenticationMiddleware)
 
 	// Create all the service clients
 	initServiceClients(&serviceClient)
@@ -49,12 +48,15 @@ func initServiceClients(serviceClient *client.Client) {
 }
 
 func initRoutes(router *mux.Router) {
-	router.HandleFunc("/users/register", registerNewUser).Methods("POST")
-	router.HandleFunc("/users/login", getAuthToken).Methods("POST")
-	router.HandleFunc("/available-vehicles", availableVehicles).Methods("GET")
-	router.HandleFunc("/booking", createBooking).Methods("POST")
-	router.HandleFunc("/booking", deleteBooking).Methods("DELETE")
-	router.HandleFunc("/begin-ride", beginRide).Methods("POST")
-	router.HandleFunc("/end-ride", endRide).Methods("POST")
-	router.HandleFunc("/statistics", retrieveStatistics).Methods("GET")
+	// Unauthorized routes
+	router.Handle("/register", http.HandlerFunc(registerNewUser)).Methods("POST")
+	router.Handle("/login", http.HandlerFunc(getAuthToken)).Methods("POST")
+
+	// Authorized routes
+	router.Handle("/available-vehicles", authenticationMiddleware(http.HandlerFunc(availableVehicles))).Methods("GET")
+	router.Handle("/booking", authenticationMiddleware(http.HandlerFunc(createBooking))).Methods("POST")
+	router.Handle("/booking", authenticationMiddleware(http.HandlerFunc(deleteBooking))).Methods("DELETE")
+	router.Handle("/begin-ride", authenticationMiddleware(http.HandlerFunc(beginRide))).Methods("POST")
+	router.Handle("/end-ride", authenticationMiddleware(http.HandlerFunc(endRide))).Methods("POST")
+	router.Handle("/statistics", authenticationMiddleware(http.HandlerFunc(retrieveStatistics))).Methods("GET")
 }
