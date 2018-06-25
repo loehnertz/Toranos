@@ -5,8 +5,8 @@ import (
 	"database/sql"
 	"fmt"
 	_ "github.com/lib/pq"
-	"github.com/loehnertz/toranos/src/config"
-	"github.com/loehnertz/toranos/src/services/user-management/proto"
+	"github.com/loehnertz/toranos/config"
+	"github.com/loehnertz/toranos/services/user-management/proto"
 	"github.com/micro/go-micro"
 	"time"
 )

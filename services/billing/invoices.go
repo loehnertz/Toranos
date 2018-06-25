@@ -3,7 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
-	"github.com/loehnertz/toranos/src/services/fleet-controller/proto"
+	"github.com/loehnertz/toranos/services/fleet-controller/proto"
 	"github.com/micro/go-log"
 	"math/rand"
 	"time"

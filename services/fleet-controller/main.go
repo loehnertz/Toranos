@@ -4,8 +4,8 @@ import (
 	"context"
 	"database/sql"
 	_ "github.com/lib/pq"
-	"github.com/loehnertz/toranos/src/config"
-	"github.com/loehnertz/toranos/src/services/fleet-controller/proto"
+	"github.com/loehnertz/toranos/config"
+	"github.com/loehnertz/toranos/services/fleet-controller/proto"
 	"github.com/micro/go-micro"
 	"time"
 )

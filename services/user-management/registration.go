@@ -3,8 +3,8 @@ package main
 import (
 	"database/sql"
 	"fmt"
-	"github.com/loehnertz/toranos/src/config"
-	"github.com/loehnertz/toranos/src/services/user-management/proto"
+	"github.com/loehnertz/toranos/config"
+	"github.com/loehnertz/toranos/services/user-management/proto"
 	"github.com/micro/go-log"
 	"golang.org/x/crypto/bcrypt"
 )
