@@ -120,7 +120,18 @@ func beginRide(w http.ResponseWriter, r *http.Request) {
 }
 
 func endRide(w http.ResponseWriter, r *http.Request) {
+	user := gorillacontext.Get(r, "user").(*user_management.AuthenticateUserResponse)
 
+	resEndRide, errEndRide := fleetController.EndRide(context.TODO(), &fleet_controller.EndRideRequest{
+		CustomerId: user.Email,
+	})
+
+	if errEndRide != nil {
+		log.Log(errEndRide)
+		w.Write([]byte(commons.UnknownError.Error()))
+	} else {
+		respondWithJson(&w, resEndRide)
+	}
 }
 
 func retrieveStatistics(w http.ResponseWriter, r *http.Request) {
