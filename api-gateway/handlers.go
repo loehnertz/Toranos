@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"github.com/loehnertz/toranos/commons"
+	"github.com/loehnertz/toranos/services/fleet-controller/proto"
 	"github.com/loehnertz/toranos/services/fleet-monitor/proto"
 	"github.com/loehnertz/toranos/services/user-management/proto"
 	"github.com/micro/go-log"
@@ -15,12 +16,11 @@ func registerNewUser(w http.ResponseWriter, r *http.Request) {
 }
 
 func getAuthToken(w http.ResponseWriter, r *http.Request) {
-	decoder := json.NewDecoder(r.Body)
-	var body getAuthTokenRequest
-	decodeError := decoder.Decode(&body)
-	if decodeError != nil {
-		log.Log(decodeError)
-		w.Write([]byte(commons.UnknownError.Error()))
+	deserializedBody, deserializeError := deserialize(new(getAuthTokenRequest), r.Body)
+	body := deserializedBody.(*getAuthTokenRequest)
+
+	if deserializeError != nil {
+		w.Write([]byte(deserializeError.Error()))
 	} else {
 		resIssueToken, errIssueToken := userManagement.IssueUserToken(context.TODO(), &user_management.IssueUserTokenRequest{
 			Email:    body.Email,
@@ -61,7 +61,19 @@ func availableVehicles(w http.ResponseWriter, r *http.Request) {
 }
 
 func createBooking(w http.ResponseWriter, r *http.Request) {
+	deserializedBody, _ := deserialize(new(createBookingRequest), r.Body)
+	body := deserializedBody.(*createBookingRequest)
 
+	resCreateBooking, errCreateBooking := fleetController.Book(context.TODO(), &fleet_controller.BookingRequest{
+		VehicleId:  body.VehicleId,
+		CustomerId: "",
+	})
+
+	if errCreateBooking != nil {
+		w.Write([]byte(errCreateBooking.Error()))
+	} else {
+		respondWithJson(&w, resCreateBooking)
+	}
 }
 
 func deleteBooking(w http.ResponseWriter, r *http.Request) {

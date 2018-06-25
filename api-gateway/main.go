@@ -11,9 +11,11 @@ import (
 	"github.com/micro/go-plugins/wrapper/breaker/hystrix"
 	"net/http"
 	"time"
+	"github.com/loehnertz/toranos/services/fleet-controller/proto"
 )
 
 var service micro.Service
+var fleetController fleet_controller.FleetControllerService
 var fleetMonitor fleet_monitor.FleetMonitorService
 var userManagement user_management.UserManagementService
 
@@ -43,6 +45,7 @@ func main() {
 }
 
 func initServiceClients(serviceClient *client.Client) {
+	fleetController = fleet_controller.NewFleetControllerService(config.FleetControllerName, *serviceClient)
 	fleetMonitor = fleet_monitor.NewFleetMonitorService(config.FleetMonitorName, *serviceClient)
 	userManagement = user_management.NewUserManagementService(config.UserManagementName, *serviceClient)
 }
