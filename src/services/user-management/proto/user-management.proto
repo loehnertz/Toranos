@@ -20,7 +20,7 @@ message RegisterCustomerResponse {
 }
 
 message IssueUserTokenRequest {
-    string UserId = 1;
+    string Email = 1;
     string Password = 2;
 }
 
@@ -35,6 +35,6 @@ message AuthenticateUserRequest {
 
 message AuthenticateUserResponse {
     bool Authenticated = 1;
-    string UserId = 2;
+    string Email = 2;
     string Role = 3;
 }
