@@ -6,6 +6,7 @@ service FleetController {
     rpc BeginRide (BeginRideRequest) returns (BeginRideResponse) {}
     rpc EndRide (EndRideRequest) returns (EndRideResponse) {}
     rpc RetrieveReservations (Empty) returns (RetrieveReservationsResponse) {}
+    rpc RetrieveUnbilledBookings (Empty) returns (RetrieveUnbilledBookingsResponse) {}
 }
 
 message Empty{}
@@ -59,4 +60,15 @@ message RetrieveReservationsResponse {
     }
     repeated Reservation reservations = 1;
     string Error = 2;
+}
+
+message RetrieveUnbilledBookingsResponse {
+    message Booking {
+        uint32 Id = 1;
+        int64 CreatedAt = 2;
+        string Customer = 3;
+        uint32 DistanceDriven = 4;
+        uint32 TimeDriven = 5;
+    }
+    repeated Booking bookings = 1;
 }

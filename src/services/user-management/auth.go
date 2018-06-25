@@ -37,6 +37,8 @@ func issueUserToken(email string, password string) (successful bool, token strin
 }
 
 func authenticateUser(token string) (successful bool, email string, role string) {
+	// TODO: Is a check with the token from the DB needed here?
+
 	successful, email, role = verifyToken(token)
 
 	return

@@ -83,6 +83,16 @@ func (fc *FleetController) RetrieveReservations(ctx context.Context, req *fleet_
 	return nil
 }
 
+func (fc *FleetController) RetrieveUnbilledBookings(ctx context.Context, req *fleet_controller.Empty, res *fleet_controller.RetrieveUnbilledBookingsResponse) error {
+	bookings, bookingsError := retrieveUnbilledBookings()
+
+	if bookingsError == nil {
+		res.Bookings = bookings
+	}
+
+	return bookingsError
+}
+
 func main() {
 	// Connect the database
 	var databaseError error
