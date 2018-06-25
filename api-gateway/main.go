@@ -49,5 +49,12 @@ func initServiceClients(serviceClient *client.Client) {
 }
 
 func initRoutes(router *mux.Router) {
-	router.HandleFunc("/available-vehicles", AvailableVehicles)
+	router.HandleFunc("/users/token", getAuthToken).Methods("GET")
+	router.HandleFunc("/users/register", registerNewUser).Methods("POST")
+	router.HandleFunc("/available-vehicles", availableVehicles).Methods("GET")
+	router.HandleFunc("/booking", createBooking).Methods("POST")
+	router.HandleFunc("/booking", deleteBooking).Methods("DELETE")
+	router.HandleFunc("/begin-ride", beginRide).Methods("POST")
+	router.HandleFunc("/end-ride", endRide).Methods("POST")
+	router.HandleFunc("/statistics", retrieveStatistics).Methods("GET")
 }
