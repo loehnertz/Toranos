@@ -23,10 +23,13 @@ func checkForBookingsToBill() {
 			if !billingSuccessful {
 				log.Log("Billing for booking '%v' failed!", booking.Id)
 			} else {
-				fleetController.AddInvoiceToBooking(context.TODO(), &fleet_controller.AddInvoiceToBookingRequest{
+				resBilledBooking, errBilledBooking := fleetController.AddInvoiceToBooking(context.TODO(), &fleet_controller.AddInvoiceToBookingRequest{
 					BookingId: booking.Id,
 					InvoiceId: invoiceId,
 				})
+				if !resBilledBooking.Successful || errBilledBooking != nil {
+					log.Log(errBilledBooking)
+				}
 			}
 		}
 		fmt.Printf("Task '%v' finished @ %v \n", "checkForBookingsToBill", time.Now())

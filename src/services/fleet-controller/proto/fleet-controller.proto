@@ -75,7 +75,7 @@ message RetrieveUnbilledBookingsResponse {
 }
 
 message AddInvoiceToBookingRequest {
-    string BookingId = 1;
+    uint32 BookingId = 1;
     string InvoiceId = 2;
 }
 
