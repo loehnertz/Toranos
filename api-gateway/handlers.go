@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	gorillacontext "github.com/gorilla/context"
 	"github.com/loehnertz/toranos/commons"
 	"github.com/loehnertz/toranos/services/fleet-controller/proto"
 	"github.com/loehnertz/toranos/services/fleet-monitor/proto"
@@ -46,12 +47,14 @@ func availableVehicles(w http.ResponseWriter, r *http.Request) {
 }
 
 func createBooking(w http.ResponseWriter, r *http.Request) {
+	user := gorillacontext.Get(r, "user").(*user_management.AuthenticateUserResponse)
+
 	deserializedBody, _ := deserialize(new(fleet_controller.BookingRequest), r.Body)
 	body := deserializedBody.(*fleet_controller.BookingRequest)
 
 	resCreateBooking, errCreateBooking := fleetController.Book(context.TODO(), &fleet_controller.BookingRequest{
 		VehicleId:  body.VehicleId,
-		CustomerId: "",
+		CustomerId: user.Email,
 	})
 
 	if errCreateBooking != nil {
