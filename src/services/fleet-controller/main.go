@@ -3,7 +3,6 @@ package main
 import (
 	"context"
 	"database/sql"
-	"fmt"
 	_ "github.com/lib/pq"
 	"github.com/loehnertz/toranos/src/config"
 	"github.com/loehnertz/toranos/src/services/fleet-controller/proto"
@@ -93,6 +92,16 @@ func (fc *FleetController) RetrieveUnbilledBookings(ctx context.Context, req *fl
 	return bookingsError
 }
 
+func (fc *FleetController) AddInvoiceToBooking(ctx context.Context, req *fleet_controller.AddInvoiceToBookingRequest, res *fleet_controller.AddInvoiceToBookingResponse) error {
+	addInvoiceSuccessful, addInvoiceError := addInvoiceToBooking(req.BookingId, req.InvoiceId)
+
+	if addInvoiceSuccessful {
+		res.Successful = true
+	}
+
+	return addInvoiceError
+}
+
 func main() {
 	// Connect the database
 	var databaseError error
@@ -114,6 +123,6 @@ func main() {
 
 	// Run the server
 	if err := service.Run(); err != nil {
-		fmt.Println(err)
+		panic(err)
 	}
 }

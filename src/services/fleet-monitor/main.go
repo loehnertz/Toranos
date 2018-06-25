@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"fmt"
 	"github.com/go-redis/redis"
 	"github.com/loehnertz/toranos/src/commons"
 	"github.com/loehnertz/toranos/src/config"
@@ -56,6 +55,6 @@ func main() {
 
 	// Run the server
 	if err := service.Run(); err != nil {
-		fmt.Println(err)
+		panic(err)
 	}
 }
