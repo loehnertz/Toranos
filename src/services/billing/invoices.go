@@ -38,7 +38,7 @@ func checkForBookingsToBill() {
 
 func createInvoice(bookingId uint32, distanceDriven uint32, timeDriven uint32) (successful bool, invoiceId string) {
 	// TODO: Connect third-party billing provider
-	invoiceId = "I-" + string(uint32(rand.Intn(100000))+bookingId)
+	invoiceId = "I-" + fmt.Sprint(uint32(rand.Intn(100000))+bookingId)
 	successful = true
 	fmt.Printf("Invoice for booking '%v' was successfully created! \n The user drove %v meters within %v minutes. \n", bookingId, distanceDriven, timeDriven)
 	return
