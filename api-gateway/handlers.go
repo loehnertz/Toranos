@@ -12,7 +12,27 @@ import (
 )
 
 func registerNewUser(w http.ResponseWriter, r *http.Request) {
+	deserializedBody, deserializeError := deserialize(new(user_management.RegisterCustomerRequest), r.Body)
+	body := deserializedBody.(*user_management.RegisterCustomerRequest)
 
+	if deserializeError != nil {
+		w.Write([]byte(deserializeError.Error()))
+	} else {
+		resRegisterCustomer, errRegisterCustomer := userManagement.RegisterCustomer(context.TODO(), &user_management.RegisterCustomerRequest{
+			Email:     body.Email,
+			Password:  body.Password,
+			FirstName: body.FirstName,
+			LastName:  body.LastName,
+			LicenseId: body.LicenseId,
+		})
+
+		if errRegisterCustomer != nil {
+			log.Log(errRegisterCustomer)
+			w.Write([]byte(commons.UnknownError.Error()))
+		} else {
+			respondWithJson(&w, resRegisterCustomer)
+		}
+	}
 }
 
 func getAuthToken(w http.ResponseWriter, r *http.Request) {
@@ -58,7 +78,8 @@ func createBooking(w http.ResponseWriter, r *http.Request) {
 	})
 
 	if errCreateBooking != nil {
-		w.Write([]byte(errCreateBooking.Error()))
+		log.Log(errCreateBooking)
+		w.Write([]byte(commons.UnknownError.Error()))
 	} else {
 		respondWithJson(&w, resCreateBooking)
 	}
@@ -77,5 +98,5 @@ func endRide(w http.ResponseWriter, r *http.Request) {
 }
 
 func retrieveStatistics(w http.ResponseWriter, r *http.Request) {
-
+	// TODO: Implement this!
 }
