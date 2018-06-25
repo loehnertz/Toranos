@@ -29,6 +29,15 @@ func (um *UserManagement) RegisterCustomer(ctx context.Context, req *user_manage
 }
 
 func (um *UserManagement) IssueUserToken(ctx context.Context, req *user_management.IssueUserTokenRequest, res *user_management.IssueUserTokenResponse) error {
+	issuingUserTokenSuccessful, token := issueUserToken(req.Email, req.Password)
+
+	if issuingUserTokenSuccessful {
+		res.Successful = true
+		res.Token = token
+	} else {
+		res.Successful = false
+	}
+
 	return nil
 }
 

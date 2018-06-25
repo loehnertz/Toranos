@@ -19,7 +19,7 @@ func registerCustomer(database *sql.DB, req *user_management.RegisterCustomerReq
 		return
 	}
 
-	successfullyIssuedToken, tokenString := issueToken(req.Email, config.AudienceKeyCustomer)
+	successfullyIssuedToken, tokenString := createNewToken(req.Email, config.AudienceKeyCustomer)
 	if !successfullyIssuedToken {
 		return
 	}

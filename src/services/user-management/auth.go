@@ -10,8 +10,33 @@ import (
 )
 
 const RetrieveTokenSecret = "SELECT value FROM secrets WHERE key = $1"
+const PasswordFromDb = "SELECT password FROM users WHERE email = $1"
+const UpdateToken = "UPDATE users SET token = $1 WHERE email = $2"
 
-func issueToken(subject string, audience string) (bool, string) {
+func issueUserToken(email string, password string) (successful bool, token string) {
+	var passwordFromDb string
+	row := database.QueryRow(PasswordFromDb, email)
+	selectError := row.Scan(&passwordFromDb)
+	if selectError != nil {
+		log.Log(selectError)
+		return
+	}
+
+	if comparePasswords(passwordFromDb, password) {
+		successful, token = createNewToken(email, config.AudienceKeyCustomer)
+
+		_, insertError := database.Exec(UpdateToken, token, email)
+		if insertError != nil {
+			log.Log(insertError)
+			successful = false
+			token = ""
+		}
+	}
+
+	return
+}
+
+func createNewToken(subject string, audience string) (bool, string) {
 	// Create a new token
 	now := time.Now()
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
