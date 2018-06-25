@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"encoding/json"
 	"github.com/loehnertz/toranos/commons"
 	"github.com/loehnertz/toranos/services/fleet-controller/proto"
 	"github.com/loehnertz/toranos/services/fleet-monitor/proto"
@@ -31,14 +30,7 @@ func getAuthToken(w http.ResponseWriter, r *http.Request) {
 			log.Log(errIssueToken)
 			w.Write([]byte(commons.UnknownError.Error()))
 		} else {
-			jsonBytes, marshalError := json.Marshal(resIssueToken)
-			if marshalError != nil {
-				log.Log(marshalError)
-				w.Write([]byte(commons.UnknownError.Error()))
-			}
-
-			w.Header().Set("Content-Type", "application/json")
-			w.Write(jsonBytes)
+			respondWithJson(&w, resIssueToken)
 		}
 	}
 }
@@ -50,14 +42,7 @@ func availableVehicles(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte(commons.UnknownError.Error()))
 	}
 
-	jsonBytes, marshalError := json.Marshal(resAvailableVehicles)
-	if marshalError != nil {
-		log.Log(marshalError)
-		w.Write([]byte(commons.UnknownError.Error()))
-	}
-
-	w.Header().Set("Content-Type", "application/json")
-	w.Write(jsonBytes)
+	respondWithJson(&w, resAvailableVehicles)
 }
 
 func createBooking(w http.ResponseWriter, r *http.Request) {
