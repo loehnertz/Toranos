@@ -16,7 +16,7 @@ const DataSource = "user=jloehnertz dbname=toranos_users sslmode=disable"
 
 var database *sql.DB
 var service micro.Service
-var tokenSigningKey string
+var tokenSigningKey []byte
 
 type UserManagement struct{}
 
@@ -42,6 +42,16 @@ func (um *UserManagement) IssueUserToken(ctx context.Context, req *user_manageme
 }
 
 func (um *UserManagement) AuthenticateUser(ctx context.Context, req *user_management.AuthenticateUserRequest, res *user_management.AuthenticateUserResponse) error {
+	authenticated, email, role := authenticateUser(req.Token)
+
+	if authenticated {
+		res.Authenticated = true
+		res.Email = email
+		res.Role = role
+	} else {
+		res.Authenticated = false
+	}
+
 	return nil
 }
 

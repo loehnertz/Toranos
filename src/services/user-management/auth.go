@@ -36,6 +36,12 @@ func issueUserToken(email string, password string) (successful bool, token strin
 	return
 }
 
+func authenticateUser(token string) (successful bool, email string, role string) {
+	successful, email, role = verifyToken(token)
+
+	return
+}
+
 func createNewToken(subject string, audience string) (bool, string) {
 	// Create a new token
 	now := time.Now()
@@ -47,7 +53,7 @@ func createNewToken(subject string, audience string) (bool, string) {
 	})
 
 	// Sign the token with the secret
-	tokenString, err := token.SignedString([]byte(tokenSigningKey))
+	tokenString, err := token.SignedString(tokenSigningKey)
 	if err != nil {
 		log.Log(err)
 		return false, ""
@@ -55,7 +61,7 @@ func createNewToken(subject string, audience string) (bool, string) {
 	return true, tokenString
 }
 
-func verifyToken(tokenString string) (successful bool, claims jwt.Claims) {
+func verifyToken(tokenString string) (successful bool, subject string, audience string) {
 	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
 		// Validate that the correct algorithm was used
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
@@ -71,6 +77,8 @@ func verifyToken(tokenString string) (successful bool, claims jwt.Claims) {
 		successful = false
 	} else if ok && token.Valid {
 		successful = true
+		subject = claims["sub"].(string)
+		audience = claims["aud"].(string)
 	}
 
 	return
@@ -86,14 +94,14 @@ func comparePasswords(hashedPwd string, plainPwd string) bool {
 	}
 }
 
-func retrieveTokenSecret() (string, error) {
+func retrieveTokenSecret() ([]byte, error) {
 	var tokenSecret string
 	row := database.QueryRow(RetrieveTokenSecret, config.TokenSecretTableKey)
 	selectError := row.Scan(&tokenSecret)
 	if selectError != nil {
 		log.Log(selectError)
-		return "", selectError
+		return []byte(""), selectError
 	} else {
-		return tokenSecret, nil
+		return []byte(tokenSecret), nil
 	}
 }
