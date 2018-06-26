@@ -15,7 +15,7 @@ func authenticationMiddleware(next http.Handler) http.Handler {
 		token := strings.Split(r.Header.Get("Authorization"), " ")
 
 		// Check if the user is authenticated
-		resAuthenticateUser, errAuthenticateUser := userManagement.AuthenticateUser(context.TODO(), &user_management.AuthenticateUserRequest{Token: token[1]})
+		resAuthenticateUser, errAuthenticateUser := userManagementService.AuthenticateUser(context.TODO(), &user_management.AuthenticateUserRequest{Token: token[1]})
 
 		if errAuthenticateUser != nil {
 			log.Log(errAuthenticateUser)

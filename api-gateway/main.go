@@ -5,6 +5,7 @@ import (
 	"github.com/loehnertz/toranos/config"
 	"github.com/loehnertz/toranos/services/fleet-controller/proto"
 	"github.com/loehnertz/toranos/services/fleet-monitor/proto"
+	"github.com/loehnertz/toranos/services/statistics/proto"
 	"github.com/loehnertz/toranos/services/user-management/proto"
 	"github.com/micro/go-log"
 	"github.com/micro/go-micro"
@@ -15,9 +16,10 @@ import (
 )
 
 var service micro.Service
-var fleetController fleet_controller.FleetControllerService
-var fleetMonitor fleet_monitor.FleetMonitorService
-var userManagement user_management.UserManagementService
+var fleetControllerService fleet_controller.FleetControllerService
+var fleetMonitorService fleet_monitor.FleetMonitorService
+var statisticsService statistics.StatisticsService
+var userManagementService user_management.UserManagementService
 
 func main() {
 	// Create the service client
@@ -45,9 +47,10 @@ func main() {
 }
 
 func initServiceClients(serviceClient *client.Client) {
-	fleetController = fleet_controller.NewFleetControllerService(config.FleetControllerName, *serviceClient)
-	fleetMonitor = fleet_monitor.NewFleetMonitorService(config.FleetMonitorName, *serviceClient)
-	userManagement = user_management.NewUserManagementService(config.UserManagementName, *serviceClient)
+	fleetControllerService = fleet_controller.NewFleetControllerService(config.FleetControllerName, *serviceClient)
+	fleetMonitorService = fleet_monitor.NewFleetMonitorService(config.FleetMonitorName, *serviceClient)
+	statisticsService = statistics.NewStatisticsService(config.StatisticsName, *serviceClient)
+	userManagementService = user_management.NewUserManagementService(config.UserManagementName, *serviceClient)
 }
 
 func initRoutes(router *mux.Router) {

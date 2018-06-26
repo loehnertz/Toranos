@@ -6,6 +6,7 @@ import (
 	"github.com/loehnertz/toranos/commons"
 	"github.com/loehnertz/toranos/services/fleet-controller/proto"
 	"github.com/loehnertz/toranos/services/fleet-monitor/proto"
+	"github.com/loehnertz/toranos/services/statistics/proto"
 	"github.com/loehnertz/toranos/services/user-management/proto"
 	"github.com/micro/go-log"
 	"net/http"
@@ -18,7 +19,7 @@ func registerNewUser(w http.ResponseWriter, r *http.Request) {
 	if deserializeError != nil {
 		w.Write([]byte(deserializeError.Error()))
 	} else {
-		resRegisterCustomer, errRegisterCustomer := userManagement.RegisterCustomer(context.TODO(), &user_management.RegisterCustomerRequest{
+		resRegisterCustomer, errRegisterCustomer := userManagementService.RegisterCustomer(context.TODO(), &user_management.RegisterCustomerRequest{
 			Email:     body.Email,
 			Password:  body.Password,
 			FirstName: body.FirstName,
@@ -42,7 +43,7 @@ func getAuthToken(w http.ResponseWriter, r *http.Request) {
 	if deserializeError != nil {
 		w.Write([]byte(deserializeError.Error()))
 	} else {
-		resIssueToken, errIssueToken := userManagement.IssueUserToken(context.TODO(), &user_management.IssueUserTokenRequest{
+		resIssueToken, errIssueToken := userManagementService.IssueUserToken(context.TODO(), &user_management.IssueUserTokenRequest{
 			Email:    body.Email,
 			Password: body.Password,
 		})
@@ -57,7 +58,7 @@ func getAuthToken(w http.ResponseWriter, r *http.Request) {
 }
 
 func availableVehicles(w http.ResponseWriter, r *http.Request) {
-	resAvailableVehicles, errAvailableVehicles := fleetMonitor.AvailableVehicles(context.TODO(), &fleet_monitor.Empty{})
+	resAvailableVehicles, errAvailableVehicles := fleetMonitorService.AvailableVehicles(context.TODO(), &fleet_monitor.Empty{})
 	if errAvailableVehicles != nil {
 		log.Log(errAvailableVehicles)
 		w.Write([]byte(commons.UnknownError.Error()))
@@ -72,7 +73,7 @@ func createBooking(w http.ResponseWriter, r *http.Request) {
 	deserializedBody, _ := deserialize(new(fleet_controller.BookingRequest), r.Body)
 	body := deserializedBody.(*fleet_controller.BookingRequest)
 
-	resCreateBooking, errCreateBooking := fleetController.Book(context.TODO(), &fleet_controller.BookingRequest{
+	resCreateBooking, errCreateBooking := fleetControllerService.Book(context.TODO(), &fleet_controller.BookingRequest{
 		VehicleId:  body.VehicleId,
 		CustomerId: user.Email,
 	})
@@ -91,7 +92,7 @@ func deleteBooking(w http.ResponseWriter, r *http.Request) {
 	deserializedBody, _ := deserialize(new(fleet_controller.UnbookingRequest), r.Body)
 	body := deserializedBody.(*fleet_controller.UnbookingRequest)
 
-	resDeleteBooking, errDeleteBooking := fleetController.Unbook(context.TODO(), &fleet_controller.UnbookingRequest{
+	resDeleteBooking, errDeleteBooking := fleetControllerService.Unbook(context.TODO(), &fleet_controller.UnbookingRequest{
 		VehicleId:  body.VehicleId,
 		CustomerId: user.Email,
 	})
@@ -107,7 +108,7 @@ func deleteBooking(w http.ResponseWriter, r *http.Request) {
 func beginRide(w http.ResponseWriter, r *http.Request) {
 	user := gorillacontext.Get(r, "user").(*user_management.AuthenticateUserResponse)
 
-	resBeginRide, errBeginRide := fleetController.BeginRide(context.TODO(), &fleet_controller.BeginRideRequest{
+	resBeginRide, errBeginRide := fleetControllerService.BeginRide(context.TODO(), &fleet_controller.BeginRideRequest{
 		CustomerId: user.Email,
 	})
 
@@ -122,7 +123,7 @@ func beginRide(w http.ResponseWriter, r *http.Request) {
 func endRide(w http.ResponseWriter, r *http.Request) {
 	user := gorillacontext.Get(r, "user").(*user_management.AuthenticateUserResponse)
 
-	resEndRide, errEndRide := fleetController.EndRide(context.TODO(), &fleet_controller.EndRideRequest{
+	resEndRide, errEndRide := fleetControllerService.EndRide(context.TODO(), &fleet_controller.EndRideRequest{
 		CustomerId: user.Email,
 	})
 
@@ -135,5 +136,16 @@ func endRide(w http.ResponseWriter, r *http.Request) {
 }
 
 func retrieveStatistics(w http.ResponseWriter, r *http.Request) {
-	// TODO: Implement this!
+	user := gorillacontext.Get(r, "user").(*user_management.AuthenticateUserResponse)
+
+	resBookings, errBookings := statisticsService.RetrieveBookings(context.TODO(), &statistics.RetrieveBookingsRequest{
+		UserId: user.Email,
+	})
+
+	if errBookings != nil {
+		log.Log(errBookings)
+		w.Write([]byte(commons.UnknownError.Error()))
+	} else {
+		respondWithJson(&w, resBookings)
+	}
 }
