@@ -3,6 +3,7 @@ package main
 import (
 	"github.com/gorilla/mux"
 	"github.com/loehnertz/toranos/config"
+	"github.com/loehnertz/toranos/services/fleet-controller/proto"
 	"github.com/loehnertz/toranos/services/fleet-monitor/proto"
 	"github.com/loehnertz/toranos/services/user-management/proto"
 	"github.com/micro/go-log"
@@ -11,7 +12,6 @@ import (
 	"github.com/micro/go-plugins/wrapper/breaker/hystrix"
 	"net/http"
 	"time"
-	"github.com/loehnertz/toranos/services/fleet-controller/proto"
 )
 
 var service micro.Service

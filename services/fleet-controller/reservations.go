@@ -9,7 +9,7 @@ import (
 )
 
 const AllReservations = "SELECT id, created_at, vehicle, customer, status FROM bookings WHERE status = $1 OR status = $2"
-const AllUnbilledBookings = "SELECT id, created_at, customer, distance_driven, time_driven FROM bookings WHERE status = $1 AND invoice IS NULL"
+const AllUnbilledBookings = "SELECT id, created_at, customer, distance_driven, time_driven FROM bookings WHERE (status = $1 OR status = $2) AND invoice IS NULL"
 
 func retrieveReservations() (reservations []*fleet_controller.RetrieveReservationsResponse_Reservation, err error) {
 	rows, reservationRetrievalError := database.Query(AllReservations, config.StatusReserved, config.StatusDriving)
@@ -48,7 +48,7 @@ func retrieveReservations() (reservations []*fleet_controller.RetrieveReservatio
 }
 
 func retrieveUnbilledBookings() (bookings []*fleet_controller.RetrieveUnbilledBookingsResponse_Booking, err error) {
-	rows, bookingsRetrievalError := database.Query(AllUnbilledBookings, config.StatusDone)
+	rows, bookingsRetrievalError := database.Query(AllUnbilledBookings, config.StatusDone, config.StatusCanceled)
 	defer rows.Close()
 	if bookingsRetrievalError != nil {
 		log.Log(bookingsRetrievalError)

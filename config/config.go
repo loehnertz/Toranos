@@ -16,6 +16,7 @@ const StatusError = 0
 const StatusReserved = 1
 const StatusDriving = 2
 const StatusDone = 3
+const StatusCanceled = 4
 const ReservationTimeInSeconds = 900
 
 // UserManagement settings
