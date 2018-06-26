@@ -19,8 +19,8 @@ It has these top-level messages:
 	EndRideResponse
 	RetrieveReservationsResponse
 	RetrieveUnbilledBookingsResponse
-	RetrieveBilledBookingsByCustomerRequest
-	RetrieveBilledBookingsByCustomerResponse
+	RetrieveBilledBookingsOfCustomerRequest
+	RetrieveBilledBookingsOfCustomerResponse
 	AddInvoiceToBookingRequest
 	AddInvoiceToBookingResponse
 	Booking
@@ -62,7 +62,7 @@ type FleetControllerService interface {
 	EndRide(ctx context.Context, in *EndRideRequest, opts ...client.CallOption) (*EndRideResponse, error)
 	RetrieveReservations(ctx context.Context, in *Empty, opts ...client.CallOption) (*RetrieveReservationsResponse, error)
 	RetrieveUnbilledBookings(ctx context.Context, in *Empty, opts ...client.CallOption) (*RetrieveUnbilledBookingsResponse, error)
-	RetrieveBilledBookingsByCustomer(ctx context.Context, in *RetrieveBilledBookingsByCustomerRequest, opts ...client.CallOption) (*RetrieveBilledBookingsByCustomerResponse, error)
+	RetrieveBilledBookingsOfCustomer(ctx context.Context, in *RetrieveBilledBookingsOfCustomerRequest, opts ...client.CallOption) (*RetrieveBilledBookingsOfCustomerResponse, error)
 	AddInvoiceToBooking(ctx context.Context, in *AddInvoiceToBookingRequest, opts ...client.CallOption) (*AddInvoiceToBookingResponse, error)
 }
 
@@ -144,9 +144,9 @@ func (c *fleetControllerService) RetrieveUnbilledBookings(ctx context.Context, i
 	return out, nil
 }
 
-func (c *fleetControllerService) RetrieveBilledBookingsByCustomer(ctx context.Context, in *RetrieveBilledBookingsByCustomerRequest, opts ...client.CallOption) (*RetrieveBilledBookingsByCustomerResponse, error) {
-	req := c.c.NewRequest(c.name, "FleetController.RetrieveBilledBookingsByCustomer", in)
-	out := new(RetrieveBilledBookingsByCustomerResponse)
+func (c *fleetControllerService) RetrieveBilledBookingsOfCustomer(ctx context.Context, in *RetrieveBilledBookingsOfCustomerRequest, opts ...client.CallOption) (*RetrieveBilledBookingsOfCustomerResponse, error) {
+	req := c.c.NewRequest(c.name, "FleetController.RetrieveBilledBookingsOfCustomer", in)
+	out := new(RetrieveBilledBookingsOfCustomerResponse)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
 		return nil, err
@@ -173,7 +173,7 @@ type FleetControllerHandler interface {
 	EndRide(context.Context, *EndRideRequest, *EndRideResponse) error
 	RetrieveReservations(context.Context, *Empty, *RetrieveReservationsResponse) error
 	RetrieveUnbilledBookings(context.Context, *Empty, *RetrieveUnbilledBookingsResponse) error
-	RetrieveBilledBookingsByCustomer(context.Context, *RetrieveBilledBookingsByCustomerRequest, *RetrieveBilledBookingsByCustomerResponse) error
+	RetrieveBilledBookingsOfCustomer(context.Context, *RetrieveBilledBookingsOfCustomerRequest, *RetrieveBilledBookingsOfCustomerResponse) error
 	AddInvoiceToBooking(context.Context, *AddInvoiceToBookingRequest, *AddInvoiceToBookingResponse) error
 }
 
@@ -185,7 +185,7 @@ func RegisterFleetControllerHandler(s server.Server, hdlr FleetControllerHandler
 		EndRide(ctx context.Context, in *EndRideRequest, out *EndRideResponse) error
 		RetrieveReservations(ctx context.Context, in *Empty, out *RetrieveReservationsResponse) error
 		RetrieveUnbilledBookings(ctx context.Context, in *Empty, out *RetrieveUnbilledBookingsResponse) error
-		RetrieveBilledBookingsByCustomer(ctx context.Context, in *RetrieveBilledBookingsByCustomerRequest, out *RetrieveBilledBookingsByCustomerResponse) error
+		RetrieveBilledBookingsOfCustomer(ctx context.Context, in *RetrieveBilledBookingsOfCustomerRequest, out *RetrieveBilledBookingsOfCustomerResponse) error
 		AddInvoiceToBooking(ctx context.Context, in *AddInvoiceToBookingRequest, out *AddInvoiceToBookingResponse) error
 	}
 	type FleetController struct {
@@ -223,8 +223,8 @@ func (h *fleetControllerHandler) RetrieveUnbilledBookings(ctx context.Context, i
 	return h.FleetControllerHandler.RetrieveUnbilledBookings(ctx, in, out)
 }
 
-func (h *fleetControllerHandler) RetrieveBilledBookingsByCustomer(ctx context.Context, in *RetrieveBilledBookingsByCustomerRequest, out *RetrieveBilledBookingsByCustomerResponse) error {
-	return h.FleetControllerHandler.RetrieveBilledBookingsByCustomer(ctx, in, out)
+func (h *fleetControllerHandler) RetrieveBilledBookingsOfCustomer(ctx context.Context, in *RetrieveBilledBookingsOfCustomerRequest, out *RetrieveBilledBookingsOfCustomerResponse) error {
+	return h.FleetControllerHandler.RetrieveBilledBookingsOfCustomer(ctx, in, out)
 }
 
 func (h *fleetControllerHandler) AddInvoiceToBooking(ctx context.Context, in *AddInvoiceToBookingRequest, out *AddInvoiceToBookingResponse) error {
