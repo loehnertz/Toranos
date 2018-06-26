@@ -19,7 +19,7 @@ const InsertNewBooking = "INSERT INTO bookings (created_at, vehicle, customer) V
 const CancelExistingBooking = "UPDATE bookings SET status = $1 WHERE vehicle = $2 AND customer = $3 AND status = $4"
 const UpdateBookingOnCustomerIdWithCertainStatus = "UPDATE bookings SET status = $1 WHERE customer = $2 AND status = $3"
 const BookedVehicleOfCustomerIdWithCertainStatus = "SELECT vehicle FROM bookings WHERE customer = $1 AND status = $2"
-const UpdateInvoiceOfBooking = "UPDATE bookings SET invoice = $1 WHERE id = $2 AND status = $3"
+const UpdateInvoiceOfBooking = "UPDATE bookings SET invoice = $1 WHERE id = $2 AND (status = $3 OR status = $4)"
 
 var vehicleAlreadyBookedError = errors.New("vehicle already booked")
 var customerAlreadyBookedError = errors.New("customer already booked a vehicle")
@@ -125,7 +125,7 @@ func endRide(customerId string) (endRideSuccessful bool, err error) {
 }
 
 func addInvoiceToBooking(bookingId uint32, invoiceId string) (successful bool, err error) {
-	_, updateError := database.Exec(UpdateInvoiceOfBooking, invoiceId, bookingId, config.StatusDone)
+	_, updateError := database.Exec(UpdateInvoiceOfBooking, invoiceId, bookingId, config.StatusDone, config.StatusCanceled)
 	if updateError != nil {
 		log.Log(updateError)
 		err = commons.UnknownError
