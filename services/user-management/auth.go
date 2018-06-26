@@ -11,6 +11,7 @@ import (
 
 const RetrieveTokenSecret = "SELECT value FROM secrets WHERE key = $1"
 const PasswordFromDb = "SELECT password FROM users WHERE email = $1"
+const TokenFromDb = "SELECT token FROM users WHERE email = $1"
 const UpdateToken = "UPDATE users SET token = $1 WHERE email = $2"
 
 func issueUserToken(email string, password string) (successful bool, token string) {
@@ -37,9 +38,14 @@ func issueUserToken(email string, password string) (successful bool, token strin
 }
 
 func authenticateUser(token string) (successful bool, email string, role string) {
-	// TODO: Is a check with the token from the DB needed here?
-
 	successful, email, role = verifyToken(token)
+
+	var tokenFromDb string
+	row := database.QueryRow(TokenFromDb, email)
+	selectError := row.Scan(&tokenFromDb)
+	if selectError != nil || tokenFromDb != token {
+		return false, "", ""
+	}
 
 	return
 }
