@@ -7,9 +7,10 @@ const FleetMonitorName = "fleet-monitor"
 const TelemetryName = "telemetry"
 const UserManagementName = "user-management"
 const BookingName = "booking"
+const StatisticsName = "statistics"
 
 // API-Gateway settings
-const ApiGatewayPort = ":8000"
+const ApiGatewayPort = ":8008"
 
 // FleetController settings
 const StatusError = 0
