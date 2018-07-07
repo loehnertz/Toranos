@@ -1,0 +1,37 @@
+[
+  {
+    "key": "caching-ttls",
+    "flags": 0,
+    "value": "ewogICJhdmFpbGFibGVWZWhpY2xlcyI6IDYwCn0="
+  },
+  {
+    "key": "crons",
+    "flags": 0,
+    "value": "ewogICJjaGVja0ZvckV4cGlyZWRSZXNlcnZhdGlvbnMiOiAiMCAqLzEgKiAqICogKiIsCiAgImNoZWNrRm9yQm9va2luZ3NUb0JpbGwiOiAiMCAqLzUgKiAqICogKiIKfQ=="
+  },
+  {
+    "key": "ports",
+    "flags": 0,
+    "value": "ewogICJhcGktZ2F0ZXdheSI6ICI6ODAwOCIKfQ=="
+  },
+  {
+    "key": "service-names",
+    "flags": 0,
+    "value": "ewogICJhcGktZ2F0ZXdheSI6ICJhcGktZ2F0ZXdheSIsCiAgImJvb2tpbmciOiAiYm9va2luZyIsCiAgImZsZWV0LWNvbnRyb2xsZXIiOiAiZmxlZXQtY29udHJvbGxlciIsCiAgImZsZWV0LW1vbml0b3IiOiAiZmxlZXQtbW9uaXRvciIsCiAgInN0YXRpc3RpY3MiOiAic3RhdGlzdGljcyIsCiAgInRlbGVtZXRyeSI6ICJ0ZWxlbWV0cnkiLAogICJ1c2VyLW1hbmFnZW1lbnQiOiAidXNlci1tYW5hZ2VtZW50Igp9"
+  },
+  {
+    "key": "service-settings/",
+    "flags": 0,
+    "value": ""
+  },
+  {
+    "key": "service-settings/fleet-controller",
+    "flags": 0,
+    "value": "ewogICJzdGF0dXNlcyI6IHsKICAgICJlcnJvciI6IDAsCiAgICAicmVzZXJ2ZWQiOiAxLAogICAgImRyaXZpbmciOiAyLAogICAgImRvbmUiOiAzLAogICAgImNhbmNlbGVkIiA6IDQKICB9LAogICJyZXNlcnZhdGlvblRpbWUiOiA5MDAKfQ=="
+  },
+  {
+    "key": "service-settings/user-management",
+    "flags": 0,
+    "value": "ewogICJ0b2tlblNlY3JldFRhYmxlS2V5IjogInRva2VuX3NlY3JldCIsCiAgImF1ZGllbmNlS2V5Q3VzdG9tZXIiOiAiY3VzdG9tZXIiCn0="
+  }
+]
