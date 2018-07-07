@@ -1,32 +1,39 @@
 package main
 
 import (
-	"github.com/loehnertz/toranos/config"
+	"github.com/loehnertz/toranos/common"
 	"github.com/loehnertz/toranos/services/fleet-controller/proto"
+	"github.com/micro/go-config"
 	"github.com/micro/go-micro"
 	"github.com/robfig/cron"
 	"time"
 )
 
+var conf config.Config
 var service micro.Service
 var fleetController fleet_controller.FleetControllerService
 
 func main() {
+	conf = common.InitConfig()
+
 	// Create the service
 	service = micro.NewService(
-		micro.Name(config.BookingName),
+		micro.Name(common.GetConfigStringByPath(conf, "service-names", "booking")),
 		micro.RegisterTTL(time.Second*30),
 		micro.RegisterInterval(time.Second*10),
 	)
 	service.Init()
 
 	// Initialize the service clients
-	fleetController = fleet_controller.NewFleetControllerService(config.FleetControllerName, service.Client())
+	fleetController = fleet_controller.NewFleetControllerService(
+		common.GetConfigStringByPath(conf, "service-names", "fleet-controller"),
+		service.Client(),
+	)
 
 	// Initialize all the tasks
 	scheduler := cron.New()
 
-	scheduler.AddFunc(config.CheckForBookingsToBillInterval, checkForBookingsToBill)
+	scheduler.AddFunc(common.GetConfigStringByPath(conf, "crons", "checkForBookingsToBill"), checkForBookingsToBill)
 
 	// Start all the tasks
 	scheduler.Start()
