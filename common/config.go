@@ -7,12 +7,7 @@ import (
 	"github.com/micro/go-config/source/consul"
 )
 
-func GetConfigByPath(path ...string) string {
-	conf := initConfig()
-	return conf.Get(path...).String(generateNewConfigError(path...).Error())
-}
-
-func initConfig() config.Config {
+func InitConfig() config.Config {
 	// Create Consul as a source
 	consulSource := consul.NewSource(consul.WithPrefix("/"))
 
@@ -25,6 +20,26 @@ func initConfig() config.Config {
 	return conf
 }
 
+func GetConfigIntByPath(conf config.Config, path ...string) int {
+	setting := conf.Get(path...).Int(-1)
+
+	if setting == -1 {
+		panic(generateNewConfigError(path...))
+	} else {
+		return setting
+	}
+}
+
+func GetConfigStringByPath(conf config.Config, path ...string) string {
+	setting := conf.Get(path...).String("error")
+
+	if setting == "error" {
+		panic(generateNewConfigError(path...))
+	} else {
+		return setting
+	}
+}
+
 func generateNewConfigError(path ...string) error {
-	return errors.New(fmt.Sprintf("No config could be found for path '%v'", path))
+	return errors.New(fmt.Sprintf("no config could be found for path: %v", path))
 }
