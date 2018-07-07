@@ -3,7 +3,7 @@ package main
 import (
 	"context"
 	"encoding/json"
-	"github.com/loehnertz/toranos/commons"
+	"github.com/loehnertz/toranos/common"
 	"github.com/loehnertz/toranos/config"
 	"github.com/loehnertz/toranos/services/fleet-controller/proto"
 	"github.com/loehnertz/toranos/services/fleet-monitor/proto"
@@ -60,7 +60,7 @@ func determineAvailableVehicles() (vehicles []fleet_monitor.AvailableVehiclesRes
 		for i := range resAllVehicles.Vehicles {
 			vehicle := resAllVehicles.Vehicles[i]
 
-			contains := commons.SliceOfStringsContains(reservedVehicles, vehicle.VehicleId)
+			contains := common.SliceOfStringsContains(reservedVehicles, vehicle.VehicleId)
 			if contains == false {
 				vehicles = append(vehicles, fleet_monitor.AvailableVehiclesResponse_Vehicle{
 					VehicleId:                      vehicle.VehicleId,
@@ -77,7 +77,7 @@ func determineAvailableVehicles() (vehicles []fleet_monitor.AvailableVehiclesRes
 }
 
 func writeAvailableVehiclesIntoRedisCache(structure interface{}) {
-	redisSetError := redisClient.Set(RedisAvailableVehiclesKey, commons.StringifyIntoJson(structure), config.RedisAvailableVehiclesExpirationTimeInSeconds*time.Second).Err()
+	redisSetError := redisClient.Set(RedisAvailableVehiclesKey, common.StringifyIntoJson(structure), config.RedisAvailableVehiclesExpirationTimeInSeconds*time.Second).Err()
 	if redisSetError != nil {
 		log.Log(redisSetError)
 	}

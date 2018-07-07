@@ -1,4 +1,4 @@
-package commons
+package common
 
 type Vehicle struct {
 	Id       string

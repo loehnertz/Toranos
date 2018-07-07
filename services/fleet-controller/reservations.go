@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/loehnertz/toranos/commons"
+	"github.com/loehnertz/toranos/common"
 	"github.com/loehnertz/toranos/config"
 	"github.com/loehnertz/toranos/services/fleet-controller/proto"
 	"github.com/micro/go-log"
@@ -15,7 +15,7 @@ func retrieveReservations() (reservations []*fleet_controller.RetrieveReservatio
 	defer rows.Close()
 	if reservationRetrievalError != nil {
 		log.Log(reservationRetrievalError)
-		err = commons.UnknownError
+		err = common.UnknownError
 	}
 
 	for rows.Next() {
@@ -26,7 +26,7 @@ func retrieveReservations() (reservations []*fleet_controller.RetrieveReservatio
 		var status int
 		if rowsScanningError := rows.Scan(&id, &createdAt, &vehicle, &customer, &status); rowsScanningError != nil {
 			log.Log(rowsScanningError)
-			err = commons.UnknownError
+			err = common.UnknownError
 		} else {
 			reservations = append(reservations, &fleet_controller.RetrieveReservationsResponse_Reservation{
 				Id:        id,
@@ -40,7 +40,7 @@ func retrieveReservations() (reservations []*fleet_controller.RetrieveReservatio
 
 	if rowsError := rows.Err(); rowsError != nil {
 		log.Log(rowsError)
-		err = commons.UnknownError
+		err = common.UnknownError
 	}
 
 	return

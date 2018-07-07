@@ -3,7 +3,7 @@ package main
 import (
 	"context"
 	gorillacontext "github.com/gorilla/context"
-	"github.com/loehnertz/toranos/commons"
+	"github.com/loehnertz/toranos/common"
 	"github.com/loehnertz/toranos/services/fleet-controller/proto"
 	"github.com/loehnertz/toranos/services/fleet-monitor/proto"
 	"github.com/loehnertz/toranos/services/statistics/proto"
@@ -29,7 +29,7 @@ func registerNewUser(w http.ResponseWriter, r *http.Request) {
 
 		if errRegisterCustomer != nil {
 			log.Log(errRegisterCustomer)
-			w.Write([]byte(commons.UnknownError.Error()))
+			w.Write([]byte(common.UnknownError.Error()))
 		} else {
 			respondWithJson(&w, resRegisterCustomer)
 		}
@@ -50,7 +50,7 @@ func getAuthToken(w http.ResponseWriter, r *http.Request) {
 
 		if errIssueToken != nil {
 			log.Log(errIssueToken)
-			w.Write([]byte(commons.UnknownError.Error()))
+			w.Write([]byte(common.UnknownError.Error()))
 		} else {
 			respondWithJson(&w, resIssueToken)
 		}
@@ -61,7 +61,7 @@ func availableVehicles(w http.ResponseWriter, r *http.Request) {
 	resAvailableVehicles, errAvailableVehicles := fleetMonitorService.AvailableVehicles(context.TODO(), &fleet_monitor.Empty{})
 	if errAvailableVehicles != nil {
 		log.Log(errAvailableVehicles)
-		w.Write([]byte(commons.UnknownError.Error()))
+		w.Write([]byte(common.UnknownError.Error()))
 	}
 
 	respondWithJson(&w, resAvailableVehicles)
@@ -80,7 +80,7 @@ func createBooking(w http.ResponseWriter, r *http.Request) {
 
 	if errCreateBooking != nil {
 		log.Log(errCreateBooking)
-		w.Write([]byte(commons.UnknownError.Error()))
+		w.Write([]byte(common.UnknownError.Error()))
 	} else {
 		respondWithJson(&w, resCreateBooking)
 	}
@@ -99,7 +99,7 @@ func deleteBooking(w http.ResponseWriter, r *http.Request) {
 
 	if errDeleteBooking != nil {
 		log.Log(errDeleteBooking)
-		w.Write([]byte(commons.UnknownError.Error()))
+		w.Write([]byte(common.UnknownError.Error()))
 	} else {
 		respondWithJson(&w, resDeleteBooking)
 	}
@@ -114,7 +114,7 @@ func beginRide(w http.ResponseWriter, r *http.Request) {
 
 	if errBeginRide != nil {
 		log.Log(errBeginRide)
-		w.Write([]byte(commons.UnknownError.Error()))
+		w.Write([]byte(common.UnknownError.Error()))
 	} else {
 		respondWithJson(&w, resBeginRide)
 	}
@@ -129,7 +129,7 @@ func endRide(w http.ResponseWriter, r *http.Request) {
 
 	if errEndRide != nil {
 		log.Log(errEndRide)
-		w.Write([]byte(commons.UnknownError.Error()))
+		w.Write([]byte(common.UnknownError.Error()))
 	} else {
 		respondWithJson(&w, resEndRide)
 	}
@@ -144,7 +144,7 @@ func retrieveStatistics(w http.ResponseWriter, r *http.Request) {
 
 	if errBookings != nil {
 		log.Log(errBookings)
-		w.Write([]byte(commons.UnknownError.Error()))
+		w.Write([]byte(common.UnknownError.Error()))
 	} else {
 		respondWithJson(&w, resBookings)
 	}

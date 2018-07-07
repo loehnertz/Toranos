@@ -3,7 +3,7 @@ package main
 import (
 	"context"
 	"github.com/go-redis/redis"
-	"github.com/loehnertz/toranos/commons"
+	"github.com/loehnertz/toranos/common"
 	"github.com/loehnertz/toranos/config"
 	"github.com/loehnertz/toranos/services/telemetry/proto"
 	"github.com/micro/go-micro"
@@ -25,7 +25,7 @@ func (tm *Telemetry) AllVehicles(ctx context.Context, req *telemetry.Empty, res 
 
 func main() {
 	// Initialize a Redis client
-	redisClient = commons.InitRedisClient(commons.RedisHostAddress, "", commons.RedisDatabaseId)
+	redisClient = common.InitRedisClient(common.RedisHostAddress, "", common.RedisDatabaseId)
 
 	// Create the service
 	service = micro.NewService(

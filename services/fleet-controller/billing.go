@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/loehnertz/toranos/commons"
+	"github.com/loehnertz/toranos/common"
 	"github.com/loehnertz/toranos/config"
 	"github.com/loehnertz/toranos/services/fleet-controller/proto"
 	"github.com/micro/go-log"
@@ -16,7 +16,7 @@ func retrieveUnbilledBookings() (bookings []*fleet_controller.Booking, err error
 	defer rows.Close()
 	if bookingsRetrievalError != nil {
 		log.Log(bookingsRetrievalError)
-		err = commons.UnknownError
+		err = common.UnknownError
 	}
 
 	for rows.Next() {
@@ -27,7 +27,7 @@ func retrieveUnbilledBookings() (bookings []*fleet_controller.Booking, err error
 		var timeDriven uint32
 		if rowsScanningError := rows.Scan(&id, &createdAt, &customer, &distanceDriven, &timeDriven); rowsScanningError != nil {
 			log.Log(rowsScanningError)
-			err = commons.UnknownError
+			err = common.UnknownError
 		} else {
 			bookings = append(bookings, &fleet_controller.Booking{
 				Id:             id,
@@ -41,7 +41,7 @@ func retrieveUnbilledBookings() (bookings []*fleet_controller.Booking, err error
 
 	if rowsError := rows.Err(); rowsError != nil {
 		log.Log(rowsError)
-		err = commons.UnknownError
+		err = common.UnknownError
 	}
 
 	return
@@ -52,7 +52,7 @@ func retrieveBilledBookingsOfCustomer(customer string) (bookings []*fleet_contro
 	defer rows.Close()
 	if bookingsRetrievalError != nil {
 		log.Log(bookingsRetrievalError)
-		err = commons.UnknownError
+		err = common.UnknownError
 	}
 
 	for rows.Next() {
@@ -65,7 +65,7 @@ func retrieveBilledBookingsOfCustomer(customer string) (bookings []*fleet_contro
 		var invoice string
 		if rowsScanningError := rows.Scan(&id, &createdAt, &vehicle, &customer, &distanceDriven, &timeDriven, &invoice); rowsScanningError != nil {
 			log.Log(rowsScanningError)
-			err = commons.UnknownError
+			err = common.UnknownError
 		} else {
 			bookings = append(bookings, &fleet_controller.Booking{
 				Id:             id,
@@ -81,7 +81,7 @@ func retrieveBilledBookingsOfCustomer(customer string) (bookings []*fleet_contro
 
 	if rowsError := rows.Err(); rowsError != nil {
 		log.Log(rowsError)
-		err = commons.UnknownError
+		err = common.UnknownError
 	}
 
 	return

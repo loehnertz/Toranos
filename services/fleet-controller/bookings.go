@@ -5,7 +5,7 @@ import (
 	"errors"
 	"fmt"
 	_ "github.com/lib/pq"
-	"github.com/loehnertz/toranos/commons"
+	"github.com/loehnertz/toranos/common"
 	"github.com/loehnertz/toranos/config"
 	"github.com/micro/go-log"
 	"strings"
@@ -43,13 +43,13 @@ func book(vehicleId string, customerId string) (booked bool, err error) {
 				err = insertError
 				log.Log(insertError)
 			}
-		} else if strings.Contains(BookingsOnCustomerIdError.Error(), commons.FoundRowsErrorSubstring) {
+		} else if strings.Contains(BookingsOnCustomerIdError.Error(), common.FoundRowsErrorSubstring) {
 			err = customerAlreadyBookedError
 		} else {
 			err = BookingsOnCustomerIdError
 		}
 	} else {
-		if strings.Contains(BookingsOnVehicleIdError.Error(), commons.FoundRowsErrorSubstring) {
+		if strings.Contains(BookingsOnVehicleIdError.Error(), common.FoundRowsErrorSubstring) {
 			err = vehicleAlreadyBookedError
 		} else {
 			err = BookingsOnVehicleIdError
@@ -128,7 +128,7 @@ func addInvoiceToBooking(bookingId uint32, invoiceId string) (successful bool, e
 	_, updateError := database.Exec(UpdateInvoiceOfBooking, invoiceId, bookingId, config.StatusDone, config.StatusCanceled)
 	if updateError != nil {
 		log.Log(updateError)
-		err = commons.UnknownError
+		err = common.UnknownError
 	} else {
 		successful = true
 	}

@@ -3,7 +3,7 @@ package main
 import (
 	"context"
 	"github.com/go-redis/redis"
-	"github.com/loehnertz/toranos/commons"
+	"github.com/loehnertz/toranos/common"
 	"github.com/loehnertz/toranos/config"
 	"github.com/loehnertz/toranos/services/fleet-controller/proto"
 	"github.com/loehnertz/toranos/services/fleet-monitor/proto"
@@ -28,7 +28,7 @@ func (fm *FleetMonitor) AvailableVehicles(ctx context.Context, req *fleet_monito
 
 func main() {
 	// Initialize a Redis client
-	redisClient = commons.InitRedisClient(commons.RedisHostAddress, "", commons.RedisDatabaseId)
+	redisClient = common.InitRedisClient(common.RedisHostAddress, "", common.RedisDatabaseId)
 
 	// Create the service
 	service = micro.NewService(

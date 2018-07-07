@@ -3,7 +3,7 @@ package main
 import (
 	"encoding/json"
 	"github.com/go-redis/redis"
-	"github.com/loehnertz/toranos/commons"
+	"github.com/loehnertz/toranos/common"
 	"github.com/loehnertz/toranos/services/telemetry/proto"
 	"github.com/micro/go-log"
 )
@@ -14,7 +14,7 @@ func retrieveAllVehicles(redisClient *redis.Client) (vehicles []*telemetry.AllVe
 	if redisRetrievalError != nil {
 		log.Log(redisRetrievalError)
 	} else {
-		var allVehicles []commons.Vehicle
+		var allVehicles []common.Vehicle
 		jsonUnmarshalError := json.Unmarshal([]byte(result), &allVehicles)
 		if jsonUnmarshalError != nil {
 			log.Log(jsonUnmarshalError)
