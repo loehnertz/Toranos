@@ -14,11 +14,12 @@ var service micro.Service
 var fleetController fleet_controller.FleetControllerService
 
 func main() {
+	// Initialize the configuration
 	conf = common.InitConfig()
 
 	// Create the service
 	service = micro.NewService(
-		micro.Name(common.GetConfigStringByPath(conf, "service-names", "booking")),
+		micro.Name(common.GetConfigStringByPath(conf, "service-names", "billing")),
 		micro.RegisterTTL(time.Second*30),
 		micro.RegisterInterval(time.Second*10),
 	)
