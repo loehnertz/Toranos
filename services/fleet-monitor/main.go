@@ -39,7 +39,10 @@ func main() {
 	service.Init()
 
 	// Register the handler
-	fleet_monitor.RegisterFleetMonitorHandler(service.Server(), new(FleetMonitor))
+	fleet_monitor.RegisterFleetMonitorHandler(
+		service.Server(),
+		new(FleetMonitor),
+	)
 
 	// Initialize the service clients
 	fleetController = fleet_controller.NewFleetControllerService(config.FleetControllerName, service.Client())

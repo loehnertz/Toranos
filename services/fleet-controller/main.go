@@ -28,6 +28,7 @@ func (fc *FleetController) Book(ctx context.Context, req *fleet_controller.Booki
 		res.Successful = false
 		res.Error = bookingError.Error()
 	}
+
 	return nil
 }
 
@@ -84,6 +85,16 @@ func (fc *FleetController) RetrieveReservations(ctx context.Context, req *fleet_
 
 func (fc *FleetController) RetrieveUnbilledBookings(ctx context.Context, req *fleet_controller.Empty, res *fleet_controller.RetrieveUnbilledBookingsResponse) error {
 	bookings, bookingsError := retrieveUnbilledBookings()
+
+	if bookingsError == nil {
+		res.Bookings = bookings
+	}
+
+	return bookingsError
+}
+
+func (fc *FleetController) RetrieveBilledBookingsOfCustomer(ctx context.Context, req *fleet_controller.RetrieveBilledBookingsOfCustomerRequest, res *fleet_controller.RetrieveBilledBookingsOfCustomerResponse) error {
+	bookings, bookingsError := retrieveBilledBookingsOfCustomer(req.UserId)
 
 	if bookingsError == nil {
 		res.Bookings = bookings

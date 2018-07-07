@@ -54,11 +54,11 @@ func initServiceClients(serviceClient *client.Client) {
 }
 
 func initRoutes(router *mux.Router) {
-	// Unauthorized routes
+	// Public routes
 	router.Handle("/register", http.HandlerFunc(registerNewUser)).Methods("POST")
 	router.Handle("/login", http.HandlerFunc(getAuthToken)).Methods("POST")
 
-	// Authorized routes
+	// Authenticated routes
 	router.Handle("/available-vehicles", authenticationMiddleware(http.HandlerFunc(availableVehicles))).Methods("GET")
 	router.Handle("/booking", authenticationMiddleware(http.HandlerFunc(createBooking))).Methods("POST")
 	router.Handle("/booking", authenticationMiddleware(http.HandlerFunc(deleteBooking))).Methods("DELETE")
