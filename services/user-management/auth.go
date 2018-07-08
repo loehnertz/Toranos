@@ -82,6 +82,12 @@ func verifyToken(tokenString string) (successful bool, subject string, audience 
 	})
 
 	// Validate the token itself
+	if err != nil {
+		log.Log(err)
+		successful = false
+		return
+	}
+
 	claims, ok := token.Claims.(jwt.MapClaims)
 	if !ok || !token.Valid {
 		log.Log(err)
