@@ -76,7 +76,7 @@ func writeAvailableVehiclesIntoRedisCache(structure interface{}) {
 	redisSetError := redisClient.Set(
 		common.GetConfigStringByPath(conf, "caching", "keys", "availableVehicles"),
 		common.StringifyIntoJson(structure),
-		common.GetConfigDurationByPath(conf, "caching-ttls", "availableVehicles"),
+		common.GetConfigDurationByPath(conf, "caching", "ttls", "availableVehicles"),
 	).Err()
 	if redisSetError != nil {
 		log.Log(redisSetError)
