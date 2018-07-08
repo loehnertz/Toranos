@@ -2,7 +2,6 @@ package main
 
 import (
 	"github.com/loehnertz/toranos/common"
-	"github.com/loehnertz/toranos/config"
 	"github.com/loehnertz/toranos/services/fleet-controller/proto"
 	"github.com/micro/go-log"
 	"time"
@@ -12,7 +11,11 @@ const AllUnbilledBookings = "SELECT id, created_at, customer, distance_driven, t
 const AllBilledBookingsOfCustomer = "SELECT id, created_at, vehicle, customer, distance_driven, time_driven, invoice FROM bookings WHERE customer = $1 AND invoice IS NOT NULL"
 
 func retrieveUnbilledBookings() (bookings []*fleet_controller.Booking, err error) {
-	rows, bookingsRetrievalError := database.Query(AllUnbilledBookings, config.StatusDone, config.StatusCanceled)
+	rows, bookingsRetrievalError := database.Query(
+		AllUnbilledBookings,
+		getStatusKeyByName(Done),
+		getStatusKeyByName(Canceled),
+	)
 	defer rows.Close()
 	if bookingsRetrievalError != nil {
 		log.Log(bookingsRetrievalError)
@@ -25,7 +28,13 @@ func retrieveUnbilledBookings() (bookings []*fleet_controller.Booking, err error
 		var customer string
 		var distanceDriven uint32
 		var timeDriven uint32
-		if rowsScanningError := rows.Scan(&id, &createdAt, &customer, &distanceDriven, &timeDriven); rowsScanningError != nil {
+		if rowsScanningError := rows.Scan(
+			&id,
+			&createdAt,
+			&customer,
+			&distanceDriven,
+			&timeDriven,
+		); rowsScanningError != nil {
 			log.Log(rowsScanningError)
 			err = common.UnknownError
 		} else {
@@ -63,7 +72,15 @@ func retrieveBilledBookingsOfCustomer(customer string) (bookings []*fleet_contro
 		var distanceDriven uint32
 		var timeDriven uint32
 		var invoice string
-		if rowsScanningError := rows.Scan(&id, &createdAt, &vehicle, &customer, &distanceDriven, &timeDriven, &invoice); rowsScanningError != nil {
+		if rowsScanningError := rows.Scan(
+			&id,
+			&createdAt,
+			&vehicle,
+			&customer,
+			&distanceDriven,
+			&timeDriven,
+			&invoice,
+		); rowsScanningError != nil {
 			log.Log(rowsScanningError)
 			err = common.UnknownError
 		} else {

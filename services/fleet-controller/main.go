@@ -4,8 +4,9 @@ import (
 	"context"
 	"database/sql"
 	_ "github.com/lib/pq"
-	"github.com/loehnertz/toranos/config"
+	"github.com/loehnertz/toranos/common"
 	"github.com/loehnertz/toranos/services/fleet-controller/proto"
+	"github.com/micro/go-config"
 	"github.com/micro/go-micro"
 	"time"
 )
@@ -13,6 +14,7 @@ import (
 const DatabaseDriver = "postgres"
 const DataSource = "user=jloehnertz dbname=toranos_fleet sslmode=disable"
 
+var conf config.Config
 var service micro.Service
 var database *sql.DB
 
@@ -23,7 +25,7 @@ func (fc *FleetController) Book(ctx context.Context, req *fleet_controller.Booki
 
 	if bookingSuccessful == true {
 		res.Successful = true
-		res.ReservedTime = config.ReservationTimeInSeconds
+		res.ReservedTime = uint32(common.GetConfigIntByPath(conf, "service-names", "booking"))
 	} else {
 		res.Successful = false
 		res.Error = bookingError.Error()
@@ -114,6 +116,9 @@ func (fc *FleetController) AddInvoiceToBooking(ctx context.Context, req *fleet_c
 }
 
 func main() {
+	// Initialize the configuration
+	conf = common.InitConfig()
+
 	// Connect the database
 	var databaseError error
 	database, databaseError = sql.Open(DatabaseDriver, DataSource)
@@ -123,7 +128,7 @@ func main() {
 
 	// Create the service
 	service = micro.NewService(
-		micro.Name(config.FleetControllerName),
+		micro.Name(common.GetConfigStringByPath(conf, "service-names", "fleet-controller")),
 		micro.RegisterTTL(time.Second*30),
 		micro.RegisterInterval(time.Second*10),
 	)

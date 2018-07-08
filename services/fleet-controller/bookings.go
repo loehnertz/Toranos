@@ -6,7 +6,6 @@ import (
 	"fmt"
 	_ "github.com/lib/pq"
 	"github.com/loehnertz/toranos/common"
-	"github.com/loehnertz/toranos/config"
 	"github.com/micro/go-log"
 	"strings"
 	"time"
@@ -29,9 +28,19 @@ var beginningRideFailedError = errors.New("beginning the ride failed")
 var endingRideFailedError = errors.New("ending the ride failed")
 
 func book(vehicleId string, customerId string) (booked bool, err error) {
-	BookingsOnVehicleIdRows := database.QueryRow(ReservationsOnVehicleId, vehicleId, config.StatusReserved, config.StatusDriving)
+	BookingsOnVehicleIdRows := database.QueryRow(
+		ReservationsOnVehicleId,
+		vehicleId,
+		getStatusKeyByName(Reserved),
+		getStatusKeyByName(Driving),
+	)
 	BookingsOnVehicleIdError := BookingsOnVehicleIdRows.Scan()
-	BookingsOnCustomerIdRows := database.QueryRow(ReservationsOnCustomerId, customerId, config.StatusReserved, config.StatusDriving)
+	BookingsOnCustomerIdRows := database.QueryRow(
+		ReservationsOnCustomerId,
+		customerId,
+		getStatusKeyByName(Reserved),
+		getStatusKeyByName(Driving),
+	)
 	BookingsOnCustomerIdError := BookingsOnCustomerIdRows.Scan()
 
 	if BookingsOnVehicleIdError == sql.ErrNoRows {
@@ -61,11 +70,22 @@ func book(vehicleId string, customerId string) (booked bool, err error) {
 
 func unbook(vehicleId string, customerId string) (unbooked bool, err error) {
 	var id int
-	row := database.QueryRow(ReservationsOnVehicleIdAndCustomerId, vehicleId, customerId, config.StatusReserved)
+	row := database.QueryRow(
+		ReservationsOnVehicleIdAndCustomerId,
+		vehicleId,
+		customerId,
+		getStatusKeyByName(Reserved),
+	)
 	selectError := row.Scan(&id)
 
 	if selectError == nil {
-		_, deleteError := database.Exec(CancelExistingBooking, config.StatusCanceled, vehicleId, customerId, config.StatusReserved)
+		_, deleteError := database.Exec(
+			CancelExistingBooking,
+			getStatusKeyByName(Canceled),
+			vehicleId,
+			customerId,
+			getStatusKeyByName(Reserved),
+		)
 		if deleteError != nil {
 			log.Log(deleteError)
 			err = bookingCouldNotBeDeletedError
@@ -84,13 +104,22 @@ func unbook(vehicleId string, customerId string) (unbooked bool, err error) {
 
 func beginRide(customerId string) (beginRideSuccessful bool, err error) {
 	var vehicle string
-	row := database.QueryRow(BookedVehicleOfCustomerIdWithCertainStatus, customerId, config.StatusReserved)
+	row := database.QueryRow(
+		BookedVehicleOfCustomerIdWithCertainStatus,
+		customerId,
+		getStatusKeyByName(Reserved),
+	)
 	selectError := row.Scan(&vehicle)
 
 	if selectError != nil {
 		err = beginningRideFailedError
 	} else {
-		_, updateError := database.Exec(UpdateBookingOnCustomerIdWithCertainStatus, config.StatusDriving, customerId, config.StatusReserved)
+		_, updateError := database.Exec(
+			UpdateBookingOnCustomerIdWithCertainStatus,
+			getStatusKeyByName(Driving),
+			customerId,
+			getStatusKeyByName(Reserved),
+		)
 		if updateError != nil {
 			log.Log(updateError)
 			err = beginningRideFailedError
@@ -105,13 +134,22 @@ func beginRide(customerId string) (beginRideSuccessful bool, err error) {
 
 func endRide(customerId string) (endRideSuccessful bool, err error) {
 	var vehicle string
-	row := database.QueryRow(BookedVehicleOfCustomerIdWithCertainStatus, customerId, config.StatusDriving)
+	row := database.QueryRow(
+		BookedVehicleOfCustomerIdWithCertainStatus,
+		customerId,
+		getStatusKeyByName(Driving),
+	)
 	selectError := row.Scan(&vehicle)
 
 	if selectError != nil {
 		err = endingRideFailedError
 	} else {
-		_, updateError := database.Exec(UpdateBookingOnCustomerIdWithCertainStatus, config.StatusDone, customerId, config.StatusDriving)
+		_, updateError := database.Exec(
+			UpdateBookingOnCustomerIdWithCertainStatus,
+			getStatusKeyByName(Done),
+			customerId,
+			getStatusKeyByName(Driving),
+		)
 		if updateError != nil {
 			log.Log(updateError)
 			err = endingRideFailedError
@@ -125,7 +163,13 @@ func endRide(customerId string) (endRideSuccessful bool, err error) {
 }
 
 func addInvoiceToBooking(bookingId uint32, invoiceId string) (successful bool, err error) {
-	_, updateError := database.Exec(UpdateInvoiceOfBooking, invoiceId, bookingId, config.StatusDone, config.StatusCanceled)
+	_, updateError := database.Exec(
+		UpdateInvoiceOfBooking,
+		invoiceId,
+		bookingId,
+		getStatusKeyByName(Done),
+		getStatusKeyByName(Canceled),
+	)
 	if updateError != nil {
 		log.Log(updateError)
 		err = common.UnknownError

@@ -8,13 +8,13 @@ import (
 )
 
 func InitConfig() config.Config {
-	// Create Consul as a source
+	// Initialize Consul as a source
 	consulSource := consul.NewSource(consul.WithPrefix("/"))
 
 	// Create new config
 	conf := config.NewConfig()
 
-	// Load file source
+	// Load source
 	conf.Load(consulSource)
 
 	return conf
