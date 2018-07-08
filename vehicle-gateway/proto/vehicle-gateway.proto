@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+service VehicleGateway {
+    rpc ReachVehicle (ReachVehicleRequest) returns (ReachVehicleResponse) {}
+}
+
+message ReachVehicleRequest {
+    string VehicleId = 1;
+    string Method = 2;
+}
+
+message ReachVehicleResponse {
+    bool Successful = 1;
+}
