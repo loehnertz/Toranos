@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/micro/go-config"
 	"github.com/micro/go-config/source/consul"
+	"time"
 )
 
 func InitConfig() config.Config {
@@ -20,6 +21,16 @@ func InitConfig() config.Config {
 	return conf
 }
 
+func GetConfigStringByPath(conf config.Config, path ...string) string {
+	setting := conf.Get(path...).String("error")
+
+	if setting == "error" {
+		panic(generateNewConfigError(path...))
+	} else {
+		return setting
+	}
+}
+
 func GetConfigIntByPath(conf config.Config, path ...string) int {
 	setting := conf.Get(path...).Int(-1)
 
@@ -30,10 +41,10 @@ func GetConfigIntByPath(conf config.Config, path ...string) int {
 	}
 }
 
-func GetConfigStringByPath(conf config.Config, path ...string) string {
-	setting := conf.Get(path...).String("error")
+func GetConfigDurationByPath(conf config.Config, path ...string) time.Duration {
+	setting := conf.Get(path...).Duration(-1)
 
-	if setting == "error" {
+	if setting == -1 {
 		panic(generateNewConfigError(path...))
 	} else {
 		return setting

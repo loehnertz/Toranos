@@ -4,7 +4,6 @@ import (
 	"context"
 	"encoding/json"
 	"github.com/loehnertz/toranos/common"
-	"github.com/loehnertz/toranos/config"
 	"github.com/loehnertz/toranos/services/fleet-controller/proto"
 	"github.com/loehnertz/toranos/services/fleet-monitor/proto"
 	"github.com/loehnertz/toranos/services/telemetry/proto"
@@ -77,12 +76,16 @@ func determineAvailableVehicles() (vehicles []fleet_monitor.AvailableVehiclesRes
 }
 
 func writeAvailableVehiclesIntoRedisCache(structure interface{}) {
-	redisSetError := redisClient.Set(RedisAvailableVehiclesKey, common.StringifyIntoJson(structure), config.RedisAvailableVehiclesExpirationTimeInSeconds*time.Second).Err()
+	redisSetError := redisClient.Set(
+		RedisAvailableVehiclesKey,
+		common.StringifyIntoJson(structure),
+		common.GetConfigDurationByPath(conf, "caching-ttls", "availableVehicles")*time.Second,
+	).Err()
 	if redisSetError != nil {
 		log.Log(redisSetError)
 	}
 }
 
 func calculateApproximateRadialRange(battery uint32) uint32 {
-	return battery*100 // TODO: Implement this!
+	return battery * 100 // TODO: Implement this!
 }

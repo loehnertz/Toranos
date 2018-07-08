@@ -3,7 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
-	"github.com/loehnertz/toranos/config"
+	"github.com/loehnertz/toranos/common"
 	"github.com/loehnertz/toranos/services/fleet-controller/proto"
 	"github.com/micro/go-log"
 	"time"
@@ -19,7 +19,8 @@ func checkForExpiredReservations() {
 			reservation := resReservations.Reservations[i]
 			createdAt := time.Unix(reservation.CreatedAt, 0)
 
-			if reservation.Status == config.StatusReserved && time.Since(createdAt) > (config.ReservationTimeInSeconds*time.Second) {
+			if reservation.Status == uint32(common.GetConfigIntByPath(conf, "service-settings", "fleet-controller", "statuses", "reserved")) &&
+				time.Since(createdAt) > (common.GetConfigDurationByPath(conf, "service-settings", "fleet-controller", "reservationTime")*time.Second) {
 				resUnbook, errUnbook := fleetController.Unbook(context.TODO(), &fleet_controller.UnbookingRequest{
 					VehicleId:  reservation.Vehicle,
 					CustomerId: reservation.Customer,
