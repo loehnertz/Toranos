@@ -5,9 +5,6 @@ import (
 	"github.com/micro/go-log"
 )
 
-const RedisHostAddress = "localhost:6379"
-const RedisDatabaseId = 8
-
 func InitRedisClient(host string, password string, database int) (client *redis.Client) {
 	client = redis.NewClient(&redis.Options{
 		Addr:     host,

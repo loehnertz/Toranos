@@ -11,10 +11,8 @@ import (
 	"time"
 )
 
-const RedisAvailableVehiclesKey = "available_vehicles"
-
 func retrieveAvailableVehicles() (vehicles []*fleet_monitor.AvailableVehiclesResponse_Vehicle) {
-	result, redisGetError := redisClient.Get(RedisAvailableVehiclesKey).Result()
+	result, redisGetError := redisClient.Get(common.GetConfigStringByPath(conf, "caching", "keys", "availableVehicles")).Result()
 
 	if redisGetError == nil {
 		var availableVehicles []fleet_monitor.AvailableVehiclesResponse_Vehicle
@@ -77,7 +75,7 @@ func determineAvailableVehicles() (vehicles []fleet_monitor.AvailableVehiclesRes
 
 func writeAvailableVehiclesIntoRedisCache(structure interface{}) {
 	redisSetError := redisClient.Set(
-		RedisAvailableVehiclesKey,
+		common.GetConfigStringByPath(conf, "caching", "keys", "availableVehicles"),
 		common.StringifyIntoJson(structure),
 		common.GetConfigDurationByPath(conf, "caching-ttls", "availableVehicles")*time.Second,
 	).Err()

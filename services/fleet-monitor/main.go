@@ -32,7 +32,11 @@ func main() {
 	conf = common.InitConfig()
 
 	// Initialize a Redis client
-	redisClient = common.InitRedisClient(common.RedisHostAddress, "", common.RedisDatabaseId)
+	redisClient = common.InitRedisClient(
+		common.GetConfigStringByPath(conf, "caching", "redis", "host"),
+		common.GetConfigStringByPath(conf, "caching", "redis", "password"),
+		common.GetConfigIntByPath(conf, "caching", "redis", "databaseId"),
+	)
 
 	// Create the service
 	service = micro.NewService(

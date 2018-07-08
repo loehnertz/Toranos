@@ -9,7 +9,7 @@ import (
 )
 
 func retrieveAllVehicles(redisClient *redis.Client) (vehicles []*telemetry.AllVehiclesResponse_Vehicle) {
-	result, redisRetrievalError := redisClient.Get(RedisAllVehiclesKey).Result()
+	result, redisRetrievalError := redisClient.Get(common.GetConfigStringByPath(conf, "caching", "keys", "allVehicles")).Result()
 
 	if redisRetrievalError != nil {
 		log.Log(redisRetrievalError)
