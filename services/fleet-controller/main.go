@@ -6,8 +6,10 @@ import (
 	_ "github.com/lib/pq"
 	"github.com/loehnertz/toranos/common"
 	"github.com/loehnertz/toranos/services/fleet-controller/proto"
+	"github.com/loehnertz/toranos/vehicle-gateway/proto"
 	"github.com/micro/go-config"
 	"github.com/micro/go-micro"
+	"github.com/micro/go-micro/client"
 	"time"
 )
 
@@ -17,6 +19,7 @@ const DataSource = "user=jloehnertz dbname=toranos_fleet sslmode=disable"
 var conf config.Config
 var service micro.Service
 var database *sql.DB
+var vehicleGateway vehicle_gateway.VehicleGatewayService
 
 type FleetController struct{}
 
@@ -133,6 +136,14 @@ func main() {
 		micro.RegisterInterval(time.Second*10),
 	)
 	service.Init()
+	serviceClient := service.Client()
+	serviceClient.Init(client.Retries(3))
+
+	// Initialize the service clients
+	vehicleGateway = vehicle_gateway.NewVehicleGatewayService(
+		common.GetConfigStringByPath(conf, "service-names", "vehicle-gateway"),
+		service.Client(),
+	)
 
 	// Register the handler
 	fleet_controller.RegisterFleetControllerHandler(service.Server(), new(FleetController))

@@ -1,11 +1,13 @@
 package main
 
 import (
+	"context"
 	"database/sql"
 	"errors"
 	"fmt"
 	_ "github.com/lib/pq"
 	"github.com/loehnertz/toranos/common"
+	"github.com/loehnertz/toranos/vehicle-gateway/proto"
 	"github.com/micro/go-log"
 	"strings"
 	"time"
@@ -125,7 +127,16 @@ func beginRide(customerId string) (beginRideSuccessful bool, err error) {
 			err = beginningRideFailedError
 		} else {
 			fmt.Printf("Unlocking vehicle '%v' \n", vehicle)
-			beginRideSuccessful = true
+
+			resReachVehicle, errReachVehicle := vehicleGateway.ReachVehicle(context.TODO(), &vehicle_gateway.ReachVehicleRequest{
+				VehicleId: vehicle,
+				Method:    "unlock",
+			})
+			if errReachVehicle != nil {
+				log.Log(errReachVehicle)
+			}
+
+			beginRideSuccessful = resReachVehicle.Successful
 		}
 	}
 
@@ -155,7 +166,16 @@ func endRide(customerId string) (endRideSuccessful bool, err error) {
 			err = endingRideFailedError
 		} else {
 			fmt.Printf("Locking vehicle '%v' \n", vehicle)
-			endRideSuccessful = true
+
+			resReachVehicle, errReachVehicle := vehicleGateway.ReachVehicle(context.TODO(), &vehicle_gateway.ReachVehicleRequest{
+				VehicleId: vehicle,
+				Method:    "lock",
+			})
+			if errReachVehicle != nil {
+				log.Log(errReachVehicle)
+			}
+
+			endRideSuccessful = resReachVehicle.Successful
 		}
 	}
 
