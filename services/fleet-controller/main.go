@@ -14,11 +14,10 @@ import (
 )
 
 const DatabaseDriver = "postgres"
-const DataSource = "user=jloehnertz dbname=toranos_fleet sslmode=disable"
 
 var conf config.Config
-var service micro.Service
 var database *sql.DB
+var service micro.Service
 var vehicleGateway vehicle_gateway.VehicleGatewayService
 
 type FleetController struct{}
@@ -124,7 +123,14 @@ func main() {
 
 	// Connect the database
 	var databaseError error
-	database, databaseError = sql.Open(DatabaseDriver, DataSource)
+	database, databaseError = sql.Open(
+		DatabaseDriver,
+		common.ConstructPostgresDataSourceString(
+			common.GetConfigStringByPath(conf, "databases", "postgresDatabases", "fleet", "name"),
+			common.GetConfigStringByPath(conf, "databases", "postgresDatabases", "fleet", "user"),
+			common.GetConfigStringByPath(conf, "databases", "postgresDatabases", "fleet", "ssl"),
+		),
+	)
 	if databaseError != nil {
 		panic(databaseError)
 	}

@@ -13,7 +13,6 @@ import (
 )
 
 const DatabaseDriver = "postgres"
-const DataSource = "user=jloehnertz dbname=toranos_users sslmode=disable"
 
 var conf config.Config
 var database *sql.DB
@@ -63,7 +62,14 @@ func main() {
 
 	// Connect the database
 	var databaseError error
-	database, databaseError = sql.Open(DatabaseDriver, DataSource)
+	database, databaseError = sql.Open(
+		DatabaseDriver,
+		common.ConstructPostgresDataSourceString(
+			common.GetConfigStringByPath(conf, "databases", "postgresDatabases", "users", "name"),
+			common.GetConfigStringByPath(conf, "databases", "postgresDatabases", "users", "user"),
+			common.GetConfigStringByPath(conf, "databases", "postgresDatabases", "users", "ssl"),
+		),
+	)
 	if databaseError != nil {
 		panic(databaseError)
 	}
