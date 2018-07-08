@@ -20,7 +20,7 @@ func checkForExpiredReservations() {
 			createdAt := time.Unix(reservation.CreatedAt, 0)
 
 			if reservation.Status == uint32(common.GetConfigIntByPath(conf, "service-settings", "fleet-controller", "statuses", "reserved")) &&
-				time.Since(createdAt) > (common.GetConfigDurationByPath(conf, "service-settings", "fleet-controller", "reservationTime")*time.Second) {
+				time.Since(createdAt) > common.GetConfigDurationByPath(conf, "service-settings", "fleet-controller", "reservationTime") {
 				resUnbook, errUnbook := fleetController.Unbook(context.TODO(), &fleet_controller.UnbookingRequest{
 					VehicleId:  reservation.Vehicle,
 					CustomerId: reservation.Customer,

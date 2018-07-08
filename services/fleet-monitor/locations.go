@@ -8,7 +8,6 @@ import (
 	"github.com/loehnertz/toranos/services/fleet-monitor/proto"
 	"github.com/loehnertz/toranos/services/telemetry/proto"
 	"github.com/micro/go-log"
-	"time"
 )
 
 func retrieveAvailableVehicles() (vehicles []*fleet_monitor.AvailableVehiclesResponse_Vehicle) {
@@ -77,7 +76,7 @@ func writeAvailableVehiclesIntoRedisCache(structure interface{}) {
 	redisSetError := redisClient.Set(
 		common.GetConfigStringByPath(conf, "caching", "keys", "availableVehicles"),
 		common.StringifyIntoJson(structure),
-		common.GetConfigDurationByPath(conf, "caching-ttls", "availableVehicles")*time.Second,
+		common.GetConfigDurationByPath(conf, "caching-ttls", "availableVehicles"),
 	).Err()
 	if redisSetError != nil {
 		log.Log(redisSetError)
