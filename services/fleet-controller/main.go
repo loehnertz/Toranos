@@ -27,7 +27,7 @@ func (fc *FleetController) Book(ctx context.Context, req *fleet_controller.Booki
 
 	if bookingSuccessful == true {
 		res.Successful = true
-		res.ReservedTime = uint32(common.GetConfigIntByPath(conf, "service-settings", "fleet-controller", "reservationTime"))
+		res.ReservedTime = uint32(common.GetConfigDurationByPath(conf, "service-settings", "fleet-controller", "reservationTime").Seconds())
 	} else {
 		res.Successful = false
 		res.Error = bookingError.Error()
