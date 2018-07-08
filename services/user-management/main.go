@@ -5,8 +5,9 @@ import (
 	"database/sql"
 	"fmt"
 	_ "github.com/lib/pq"
-	"github.com/loehnertz/toranos/config"
+	"github.com/loehnertz/toranos/common"
 	"github.com/loehnertz/toranos/services/user-management/proto"
+	"github.com/micro/go-config"
 	"github.com/micro/go-micro"
 	"time"
 )
@@ -14,6 +15,7 @@ import (
 const DatabaseDriver = "postgres"
 const DataSource = "user=jloehnertz dbname=toranos_users sslmode=disable"
 
+var conf config.Config
 var database *sql.DB
 var service micro.Service
 var tokenSigningKey []byte
@@ -56,6 +58,9 @@ func (um *UserManagement) AuthenticateUser(ctx context.Context, req *user_manage
 }
 
 func main() {
+	// Initialize the configuration
+	conf = common.InitConfig()
+
 	// Connect the database
 	var databaseError error
 	database, databaseError = sql.Open(DatabaseDriver, DataSource)
@@ -71,7 +76,7 @@ func main() {
 
 	// Create the service
 	service = micro.NewService(
-		micro.Name(config.UserManagementName),
+		micro.Name(common.GetConfigStringByPath(conf, "service-names", "user-management")),
 		micro.RegisterTTL(time.Second*30),
 		micro.RegisterInterval(time.Second*10),
 	)

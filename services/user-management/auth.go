@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/dgrijalva/jwt-go"
-	"github.com/loehnertz/toranos/config"
+	"github.com/loehnertz/toranos/common"
 	"github.com/micro/go-log"
 	"golang.org/x/crypto/bcrypt"
 	"time"
@@ -24,7 +24,10 @@ func issueUserToken(email string, password string) (successful bool, token strin
 	}
 
 	if comparePasswords(passwordFromDb, password) {
-		successful, token = createNewToken(email, config.AudienceKeyCustomer)
+		successful, token = createNewToken(
+			email,
+			common.GetConfigStringByPath(conf, "service-settings", "user-management", "audienceKeyCustomer"),
+		)
 
 		_, insertError := database.Exec(UpdateToken, token, email)
 		if insertError != nil {
@@ -104,7 +107,10 @@ func comparePasswords(hashedPwd string, plainPwd string) bool {
 
 func retrieveTokenSecret() ([]byte, error) {
 	var tokenSecret string
-	row := database.QueryRow(RetrieveTokenSecret, config.TokenSecretTableKey)
+	row := database.QueryRow(
+		RetrieveTokenSecret,
+		common.GetConfigStringByPath(conf, "service-settings", "user-management", "tokenSecretTableKey"),
+	)
 	selectError := row.Scan(&tokenSecret)
 	if selectError != nil {
 		log.Log(selectError)

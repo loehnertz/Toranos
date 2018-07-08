@@ -3,7 +3,7 @@ package main
 import (
 	"database/sql"
 	"fmt"
-	"github.com/loehnertz/toranos/config"
+	"github.com/loehnertz/toranos/common"
 	"github.com/loehnertz/toranos/services/user-management/proto"
 	"github.com/micro/go-log"
 	"golang.org/x/crypto/bcrypt"
@@ -19,7 +19,10 @@ func registerCustomer(database *sql.DB, req *user_management.RegisterCustomerReq
 		return
 	}
 
-	successfullyIssuedToken, tokenString := createNewToken(req.Email, config.AudienceKeyCustomer)
+	successfullyIssuedToken, tokenString := createNewToken(
+		req.Email,
+		common.GetConfigStringByPath(conf, "service-settings", "user-management", "audienceKeyCustomer"),
+	)
 	if !successfullyIssuedToken {
 		return
 	}
