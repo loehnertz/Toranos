@@ -5,6 +5,12 @@ import (
 	"github.com/micro/go-log"
 )
 
+type Vehicle struct {
+	Id       string
+	Location string
+	Battery  uint32
+}
+
 func InitRedisClient(host string, password string, database int) (client *redis.Client) {
 	client = redis.NewClient(&redis.Options{
 		Addr:     host,
