@@ -126,9 +126,9 @@ func main() {
 	database, databaseError = sql.Open(
 		DatabaseDriver,
 		common.ConstructPostgresDataSourceString(
-			common.GetConfigStringByPath(conf, "databases", "postgresDatabases", "fleet", "name"),
-			common.GetConfigStringByPath(conf, "databases", "postgresDatabases", "fleet", "user"),
-			common.GetConfigStringByPath(conf, "databases", "postgresDatabases", "fleet", "ssl"),
+			common.GetConfigStringByPath(conf, "databases", "postgres", "fleet", "name"),
+			common.GetConfigStringByPath(conf, "databases", "postgres", "fleet", "user"),
+			common.GetConfigStringByPath(conf, "databases", "postgres", "fleet", "ssl"),
 		),
 	)
 	if databaseError != nil {
