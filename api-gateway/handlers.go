@@ -3,11 +3,11 @@ package main
 import (
 	"context"
 	gorillacontext "github.com/gorilla/context"
-	"github.com/loehnertz/toranos/common"
-	"github.com/loehnertz/toranos/services/fleet-controller/proto"
-	"github.com/loehnertz/toranos/services/fleet-monitor/proto"
-	"github.com/loehnertz/toranos/services/statistics/proto"
-	"github.com/loehnertz/toranos/services/user-management/proto"
+	"github.com/loehnertz/Toranos/common"
+	"github.com/loehnertz/Toranos/services/fleet-controller/proto"
+	"github.com/loehnertz/Toranos/services/fleet-monitor/proto"
+	"github.com/loehnertz/Toranos/services/statistics/proto"
+	"github.com/loehnertz/Toranos/services/user-management/proto"
 	"github.com/micro/go-log"
 	"net/http"
 )

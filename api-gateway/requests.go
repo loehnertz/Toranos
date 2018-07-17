@@ -2,7 +2,7 @@ package main
 
 import (
 	"encoding/json"
-	"github.com/loehnertz/toranos/common"
+	"github.com/loehnertz/Toranos/common"
 	"github.com/micro/go-log"
 	"io"
 	"net/http"

@@ -2,8 +2,8 @@ package main
 
 import (
 	"context"
-	"github.com/loehnertz/toranos/common"
-	"github.com/loehnertz/toranos/vehicle-gateway/proto"
+	"github.com/loehnertz/Toranos/common"
+	"github.com/loehnertz/Toranos/vehicle-gateway/proto"
 	"github.com/micro/go-config"
 	"github.com/micro/go-micro"
 	"time"

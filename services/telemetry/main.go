@@ -3,8 +3,8 @@ package main
 import (
 	"context"
 	"github.com/go-redis/redis"
-	"github.com/loehnertz/toranos/common"
-	"github.com/loehnertz/toranos/services/telemetry/proto"
+	"github.com/loehnertz/Toranos/common"
+	"github.com/loehnertz/Toranos/services/telemetry/proto"
 	"github.com/micro/go-config"
 	"github.com/micro/go-micro"
 	"time"

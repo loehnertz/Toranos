@@ -1,8 +1,8 @@
 package main
 
 import (
-	"github.com/loehnertz/toranos/common"
-	"github.com/loehnertz/toranos/services/fleet-controller/proto"
+	"github.com/loehnertz/Toranos/common"
+	"github.com/loehnertz/Toranos/services/fleet-controller/proto"
 	"github.com/micro/go-config"
 	"github.com/micro/go-micro"
 	"github.com/robfig/cron"

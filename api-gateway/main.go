@@ -2,11 +2,11 @@ package main
 
 import (
 	"github.com/gorilla/mux"
-	"github.com/loehnertz/toranos/common"
-	"github.com/loehnertz/toranos/services/fleet-controller/proto"
-	"github.com/loehnertz/toranos/services/fleet-monitor/proto"
-	"github.com/loehnertz/toranos/services/statistics/proto"
-	"github.com/loehnertz/toranos/services/user-management/proto"
+	"github.com/loehnertz/Toranos/common"
+	"github.com/loehnertz/Toranos/services/fleet-controller/proto"
+	"github.com/loehnertz/Toranos/services/fleet-monitor/proto"
+	"github.com/loehnertz/Toranos/services/statistics/proto"
+	"github.com/loehnertz/Toranos/services/user-management/proto"
 	"github.com/micro/go-config"
 	"github.com/micro/go-log"
 	"github.com/micro/go-micro"

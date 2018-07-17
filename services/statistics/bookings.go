@@ -2,8 +2,8 @@ package main
 
 import (
 	"context"
-	"github.com/loehnertz/toranos/services/fleet-controller/proto"
-	"github.com/loehnertz/toranos/services/statistics/proto"
+	"github.com/loehnertz/Toranos/services/fleet-controller/proto"
+	"github.com/loehnertz/Toranos/services/statistics/proto"
 	"github.com/micro/go-log"
 )
 

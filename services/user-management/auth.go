@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/dgrijalva/jwt-go"
-	"github.com/loehnertz/toranos/common"
+	"github.com/loehnertz/Toranos/common"
 	"github.com/micro/go-log"
 	"golang.org/x/crypto/bcrypt"
 	"time"

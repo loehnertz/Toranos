@@ -3,8 +3,8 @@ package main
 import (
 	"context"
 	"fmt"
-	"github.com/loehnertz/toranos/common"
-	"github.com/loehnertz/toranos/services/fleet-controller/proto"
+	"github.com/loehnertz/Toranos/common"
+	"github.com/loehnertz/Toranos/services/fleet-controller/proto"
 	"github.com/micro/go-log"
 	"time"
 )
