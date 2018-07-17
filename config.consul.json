@@ -1,23 +1,48 @@
 [
   {
-    "key": "caching-ttls",
+    "key": "caching/",
     "flags": 0,
-    "value": "ewogICJhdmFpbGFibGVWZWhpY2xlcyI6IDYwCn0="
+    "value": ""
+  },
+  {
+    "key": "caching/keys",
+    "flags": 0,
+    "value": "ewoiYWxsVmVoaWNsZXMiOiAiYWxsX3ZlaGljbGVzIiwKImF2YWlsYWJsZVZlaGljbGVzIjogImF2YWlsYWJsZV92ZWhpY2xlcyIKfQ=="
+  },
+  {
+    "key": "caching/redis",
+    "flags": 0,
+    "value": "ewoiaG9zdCI6ICJsb2NhbGhvc3Q6NjM3OSIsCiJwYXNzd29yZCI6ICIiLAoiZGF0YWJhc2VJZCI6IDgKfQ=="
+  },
+  {
+    "key": "caching/ttls",
+    "flags": 0,
+    "value": "ewoiYXZhaWxhYmxlVmVoaWNsZXMiOiAiMW0iCn0="
   },
   {
     "key": "crons",
     "flags": 0,
-    "value": "ewogICJjaGVja0ZvckV4cGlyZWRSZXNlcnZhdGlvbnMiOiAiMCAqLzEgKiAqICogKiIsCiAgImNoZWNrRm9yQm9va2luZ3NUb0JpbGwiOiAiMCAqLzUgKiAqICogKiIKfQ=="
+    "value": "ewoiY2hlY2tGb3JFeHBpcmVkUmVzZXJ2YXRpb25zIjogIjAgKi8xICogKiAqICoiLAoiY2hlY2tGb3JCb29raW5nc1RvQmlsbCI6ICIwICovNSAqICogKiAqIgp9"
+  },
+  {
+    "key": "databases/",
+    "flags": 0,
+    "value": ""
+  },
+  {
+    "key": "databases/postgres",
+    "flags": 0,
+    "value": "ewoiZmxlZXQiOiB7CiJuYW1lIjogInRvcmFub3NfZmxlZXQiLAoidXNlciI6ICJqbG9laG5lcnR6IiwKInNzbCI6ICJkaXNhYmxlIgp9LAoidXNlcnMiOiB7CiJuYW1lIjogInRvcmFub3NfdXNlcnMiLAoidXNlciI6ICJqbG9laG5lcnR6IiwKInNzbCI6ICJkaXNhYmxlIgp9Cn0="
   },
   {
     "key": "ports",
     "flags": 0,
-    "value": "ewogICJhcGktZ2F0ZXdheSI6ICI6ODAwOCIKfQ=="
+    "value": "ewoiYXBpLWdhdGV3YXkiOiAiOjgwMDgiCn0="
   },
   {
     "key": "service-names",
     "flags": 0,
-    "value": "ewogICJhcGktZ2F0ZXdheSI6ICJhcGktZ2F0ZXdheSIsCiAgImJvb2tpbmciOiAiYm9va2luZyIsCiAgImZsZWV0LWNvbnRyb2xsZXIiOiAiZmxlZXQtY29udHJvbGxlciIsCiAgImZsZWV0LW1vbml0b3IiOiAiZmxlZXQtbW9uaXRvciIsCiAgInN0YXRpc3RpY3MiOiAic3RhdGlzdGljcyIsCiAgInRlbGVtZXRyeSI6ICJ0ZWxlbWV0cnkiLAogICJ1c2VyLW1hbmFnZW1lbnQiOiAidXNlci1tYW5hZ2VtZW50Igp9"
+    "value": "ewoiYXBpLWdhdGV3YXkiOiAiYXBpLWdhdGV3YXkiLAoiYmlsbGluZyI6ICJiaWxsaW5nIiwKImZsZWV0LWNvbnRyb2xsZXIiOiAiZmxlZXQtY29udHJvbGxlciIsCiJmbGVldC1tb25pdG9yIjogImZsZWV0LW1vbml0b3IiLAoibm90aWZpY2F0aW9ucyI6ICJub3RpZmljYXRpb25zIiwKInN0YXRpc3RpY3MiOiAic3RhdGlzdGljcyIsCiJ0ZWxlbWV0cnkiOiAidGVsZW1ldHJ5IiwKInVzZXItbWFuYWdlbWVudCI6ICJ1c2VyLW1hbmFnZW1lbnQiLAoidmVoaWNsZS1nYXRld2F5IjogInZlaGljbGUtZ2F0ZXdheSIKfQ=="
   },
   {
     "key": "service-settings/",
@@ -27,11 +52,11 @@
   {
     "key": "service-settings/fleet-controller",
     "flags": 0,
-    "value": "ewogICJzdGF0dXNlcyI6IHsKICAgICJlcnJvciI6IDAsCiAgICAicmVzZXJ2ZWQiOiAxLAogICAgImRyaXZpbmciOiAyLAogICAgImRvbmUiOiAzLAogICAgImNhbmNlbGVkIiA6IDQKICB9LAogICJyZXNlcnZhdGlvblRpbWUiOiA5MDAKfQ=="
+    "value": "ewoic3RhdHVzZXMiOiB7CiJlcnJvciI6IDAsCiJyZXNlcnZlZCI6IDEsCiJkcml2aW5nIjogMiwKImRvbmUiOiAzLAoiY2FuY2VsZWQiOiA0Cn0sCiJyZXNlcnZhdGlvblRpbWUiOiAiMTVtIgp9"
   },
   {
     "key": "service-settings/user-management",
     "flags": 0,
-    "value": "ewogICJ0b2tlblNlY3JldFRhYmxlS2V5IjogInRva2VuX3NlY3JldCIsCiAgImF1ZGllbmNlS2V5Q3VzdG9tZXIiOiAiY3VzdG9tZXIiCn0="
+    "value": "ewoiYXVkaWVuY2VLZXlDdXN0b21lciI6ICJjdXN0b21lciIsCiJ0b2tlblNlY3JldFRhYmxlS2V5IjogInRva2VuX3NlY3JldCIKfQ=="
   }
 ]
