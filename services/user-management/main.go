@@ -22,9 +22,7 @@ var tokenSigningKey []byte
 type UserManagement struct{}
 
 func (um *UserManagement) RegisterCustomer(ctx context.Context, req *user_management.RegisterCustomerRequest, res *user_management.RegisterCustomerResponse) error {
-	registerSuccessful, token := registerCustomer(database, req)
-
-	fmt.Println(registerSuccessful, token)
+	res.Successful, res.Token = registerCustomer(database, req)
 
 	return nil
 }
